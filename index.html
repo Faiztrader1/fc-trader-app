@@ -12,141 +12,134 @@
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-    font-family:Arial,sans-serif;
-    background:#020617;
-    color:white;
+font-family:Arial,sans-serif;
+background:#020617;
+color:white;
 }
 
 .topbar{
-    background:#111827;
-    padding:18px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    box-shadow:0 2px 10px rgba(0,0,0,0.4);
-    position:sticky;
-    top:0;
-    z-index:999;
+background:#111827;
+padding:18px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+position:sticky;
+top:0;
+z-index:999;
 }
 
 .container{
-    max-width:700px;
-    margin:auto;
-    padding:20px;
+max-width:700px;
+margin:auto;
+padding:20px;
 }
 
 .card{
-    background:#1e293b;
-    padding:20px;
-    border-radius:20px;
-    margin-bottom:20px;
-    box-shadow:0 0 20px rgba(0,0,0,0.3);
+background:#1e293b;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
 input,
 select,
 textarea{
-    width:100%;
-    padding:14px;
-    margin-top:12px;
-    border:none;
-    border-radius:12px;
-    background:#334155;
-    color:white;
-    font-size:16px;
+width:100%;
+padding:14px;
+margin-top:12px;
+border:none;
+border-radius:12px;
+background:#334155;
+color:white;
+font-size:16px;
 }
 
 textarea{
-    min-height:100px;
-    resize:none;
+min-height:100px;
+resize:none;
 }
 
 button{
-    width:100%;
-    padding:14px;
-    margin-top:15px;
-    border:none;
-    border-radius:14px;
-    background:#22c55e;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:0.9;
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:14px;
+background:#22c55e;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
 }
 
 .deleteBtn{
-    background:#ef4444;
+background:#ef4444;
+}
+
+.blueBtn{
+background:#3b82f6;
 }
 
 .stat{
-    margin-top:10px;
-    font-size:18px;
-}
-
-.aiBox{
-    background:#111827;
-    padding:15px;
-    border-radius:14px;
-    margin-top:15px;
-    line-height:1.8;
-}
-
-.footer{
-    text-align:center;
-    margin-top:30px;
-    opacity:0.7;
-    font-size:14px;
-    padding-bottom:40px;
-}
-
-.hidden{
-    display:none;
+margin-top:10px;
+font-size:18px;
 }
 
 .tradeItem{
-    background:#111827;
-    padding:14px;
-    border-radius:14px;
-    margin-top:12px;
-    line-height:1.8;
+background:#111827;
+padding:14px;
+border-radius:14px;
+margin-top:12px;
+line-height:1.8;
 }
 
 .win{
-    color:#22c55e;
-    font-weight:bold;
+color:#22c55e;
+font-weight:bold;
 }
 
 .loss{
-    color:#ef4444;
-    font-weight:bold;
+color:#ef4444;
+font-weight:bold;
 }
 
 canvas{
-    background:white;
-    border-radius:14px;
-    margin-top:20px;
-    padding:10px;
+background:white;
+border-radius:14px;
+margin-top:20px;
+padding:10px;
 }
 
-.loginTitle{
-    text-align:center;
-    margin-bottom:20px;
+.aiBox{
+background:#111827;
+padding:15px;
+border-radius:14px;
+line-height:1.8;
+margin-top:15px;
 }
 
 img{
-    width:100%;
-    margin-top:10px;
-    border-radius:12px;
+width:100%;
+margin-top:10px;
+border-radius:12px;
+}
+
+.hidden{
+display:none;
+}
+
+.footer{
+text-align:center;
+margin-top:30px;
+opacity:0.7;
+padding-bottom:40px;
 }
 
 </style>
@@ -166,11 +159,15 @@ FC Trader Pro AI
 
 <div class="card">
 
-<h2 class="loginTitle">Login Trader</h2>
+<h2 style="text-align:center;">
+Login Trader
+</h2>
 
 <input id="email" placeholder="Email">
 
-<input id="password" type="password" placeholder="Password">
+<input id="password"
+type="password"
+placeholder="Password">
 
 <button onclick="login()">
 LOGIN
@@ -188,23 +185,54 @@ REGISTER
 
 <div id="appPage" class="hidden">
 
+<!-- DASHBOARD -->
+
 <div class="card">
 
-<h2>Trading Journal</h2>
+<h2>Trading Dashboard</h2>
 
-<div class="stat" id="balance">
-Balance : $1000
+<input id="startBalance"
+type="number"
+placeholder="Masukkan Modal Awal">
+
+<button class="blueBtn"
+onclick="saveBalance()">
+
+SAVE MODAL
+
+</button>
+
+<div class="stat"
+id="balance">
+
+Balance : $0
+
 </div>
 
-<div class="stat" id="winrate">
+<div class="stat"
+id="profitStat">
+
+Total Profit : $0
+
+</div>
+
+<div class="stat"
+id="winrate">
+
 Winrate : 0%
+
 </div>
 
-<div class="stat" id="total">
+<div class="stat"
+id="total">
+
 Total Trade : 0
+
 </div>
 
 </div>
+
+<!-- SAVE TRADE -->
 
 <div class="card">
 
@@ -212,30 +240,46 @@ Total Trade : 0
 
 <input type="date" id="date">
 
-<input id="pair" placeholder="Pair">
+<input id="pair"
+placeholder="Pair">
 
-<input id="entry" type="number" placeholder="Entry">
+<input id="entry"
+type="number"
+placeholder="Entry">
 
-<input id="sl" type="number" placeholder="Stop Loss">
+<input id="sl"
+type="number"
+placeholder="Stop Loss">
 
-<input id="tp" type="number" placeholder="Take Profit">
+<input id="tp"
+type="number"
+placeholder="Take Profit">
 
 <select id="result">
+
 <option>Win</option>
 <option>Loss</option>
+
 </select>
 
-<input id="profit" type="number" placeholder="Profit / Loss">
+<input id="profit"
+type="number"
+placeholder="Profit / Loss">
 
-<textarea id="note" placeholder="Catatan Trading..."></textarea>
+<textarea id="note"
+placeholder="Catatan Trading...">
+</textarea>
 
-<input type="file" id="image">
+<input type="file"
+id="image">
 
 <button onclick="saveTrade()">
 SAVE TRADE
 </button>
 
 </div>
+
+<!-- CHART -->
 
 <div class="card">
 
@@ -253,11 +297,14 @@ SAVE TRADE
 
 </div>
 
+<!-- AI -->
+
 <div class="card">
 
 <h2>AI Trading Analysis</h2>
 
-<div class="aiBox" id="aiBox">
+<div class="aiBox"
+id="aiBox">
 
 Waiting analysis...
 
@@ -269,6 +316,8 @@ RUN AI ANALYSIS
 
 </div>
 
+<!-- HISTORY -->
+
 <div class="card">
 
 <h2>Trade History</h2>
@@ -277,10 +326,22 @@ RUN AI ANALYSIS
 
 </div>
 
+<!-- PDF -->
+
 <div class="card">
 
-<button onclick="downloadPDF()">
+<button class="blueBtn"
+onclick="downloadPDF()">
+
 EXPORT PDF REPORT
+
+</button>
+
+<button class="deleteBtn"
+onclick="resetAll()">
+
+RESET ALL DATA
+
 </button>
 
 </div>
@@ -298,71 +359,157 @@ FC Trader Pro AI © 2026
 let equityChart;
 let pieChart;
 
-/* =========================
-   LOGIN
-========================= */
+/* ======================
+REGISTER
+====================== */
 
 function register(){
 
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+let email =
+document.getElementById("email").value;
+
+let password =
+document.getElementById("password").value;
 
 if(email == "" || password == ""){
-    alert("Isi email dan password");
-    return;
+
+alert("Isi email dan password");
+
+return;
+
 }
 
-localStorage.setItem("userEmail",email);
-localStorage.setItem("userPassword",password);
+localStorage.setItem(
+"userEmail",
+email
+);
+
+localStorage.setItem(
+"userPassword",
+password
+);
 
 alert("Register berhasil");
 
 }
 
+/* ======================
+LOGIN
+====================== */
+
 function login(){
 
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+let email =
+document.getElementById("email").value;
 
-let savedEmail = localStorage.getItem("userEmail");
-let savedPassword = localStorage.getItem("userPassword");
+let password =
+document.getElementById("password").value;
 
-if(email == savedEmail && password == savedPassword){
+let savedEmail =
+localStorage.getItem("userEmail");
 
-    document.getElementById("loginPage")
-    .classList.add("hidden");
+let savedPassword =
+localStorage.getItem("userPassword");
 
-    document.getElementById("appPage")
-    .classList.remove("hidden");
+if(
+email == savedEmail &&
+password == savedPassword
+){
 
-    loadDashboard();
+document.getElementById(
+"loginPage"
+).classList.add("hidden");
+
+document.getElementById(
+"appPage"
+).classList.remove("hidden");
+
+loadDashboard();
 
 }else{
 
-    alert("Login gagal");
+alert("Login gagal");
 
 }
 
 }
 
-/* =========================
-   SAVE TRADE
-========================= */
+/* ======================
+SAVE BALANCE
+====================== */
+
+function saveBalance(){
+
+let balance =
+Number(
+document.getElementById(
+"startBalance"
+).value
+);
+
+if(balance <= 0){
+
+alert("Masukkan modal awal");
+
+return;
+
+}
+
+localStorage.setItem(
+"startBalance",
+balance
+);
+
+alert("Modal berhasil disimpan");
+
+loadDashboard();
+
+}
+
+/* ======================
+SAVE TRADE
+====================== */
 
 function saveTrade(){
 
-let date = document.getElementById("date").value;
-let pair = document.getElementById("pair").value;
-let entry = Number(document.getElementById("entry").value);
-let sl = Number(document.getElementById("sl").value);
-let tp = Number(document.getElementById("tp").value);
-let result = document.getElementById("result").value;
-let profit = Number(document.getElementById("profit").value);
-let note = document.getElementById("note").value;
+let date =
+document.getElementById("date").value;
+
+let pair =
+document.getElementById("pair").value;
+
+let entry =
+Number(
+document.getElementById("entry").value
+);
+
+let sl =
+Number(
+document.getElementById("sl").value
+);
+
+let tp =
+Number(
+document.getElementById("tp").value
+);
+
+let result =
+document.getElementById("result").value;
+
+let profit =
+Number(
+document.getElementById("profit").value
+);
+
+let note =
+document.getElementById("note").value;
 
 if(pair == "" || entry == ""){
-    alert("Isi data terlebih dahulu");
-    return;
+
+alert("Isi data trading");
+
+return;
+
 }
 
 let rr = 0;
@@ -370,42 +517,53 @@ let rr = 0;
 if(entry != sl){
 
 rr = (
-Math.abs(tp - entry) /
+Math.abs(tp - entry)
+/
 Math.abs(entry - sl)
 ).toFixed(2);
 
 }
 
-let trades = JSON.parse(localStorage.getItem("trades")) || [];
+let trades =
+JSON.parse(
+localStorage.getItem("trades")
+) || [];
 
-let imageInput = document.getElementById("image");
+let imageInput =
+document.getElementById("image");
 
 let imageUrl = "";
 
 if(imageInput.files[0]){
 
-    imageUrl = URL.createObjectURL(imageInput.files[0]);
+imageUrl =
+URL.createObjectURL(
+imageInput.files[0]
+);
 
 }
 
 trades.push({
 
-    date,
-    pair,
-    entry,
-    sl,
-    tp,
-    rr,
-    result,
-    profit,
-    note,
-    image:imageUrl
+date,
+pair,
+entry,
+sl,
+tp,
+rr,
+result,
+profit,
+note,
+image:imageUrl
 
 });
 
-localStorage.setItem("trades",JSON.stringify(trades));
+localStorage.setItem(
+"trades",
+JSON.stringify(trades)
+);
 
-alert("Trade Saved");
+alert("Trade berhasil disimpan");
 
 clearForm();
 
@@ -413,9 +571,9 @@ loadDashboard();
 
 }
 
-/* =========================
-   CLEAR FORM
-========================= */
+/* ======================
+CLEAR FORM
+====================== */
 
 function clearForm(){
 
@@ -430,14 +588,16 @@ document.getElementById("image").value = "";
 
 }
 
-/* =========================
-   DELETE TRADE
-========================= */
+/* ======================
+DELETE TRADE
+====================== */
 
 function deleteTrade(index){
 
 let trades =
-JSON.parse(localStorage.getItem("trades")) || [];
+JSON.parse(
+localStorage.getItem("trades")
+) || [];
 
 trades.splice(index,1);
 
@@ -450,20 +610,53 @@ loadDashboard();
 
 }
 
-/* =========================
-   LOAD DASHBOARD
-========================= */
+/* ======================
+RESET ALL
+====================== */
+
+function resetAll(){
+
+let yes =
+confirm(
+"Yakin hapus semua data?"
+);
+
+if(yes){
+
+localStorage.removeItem("trades");
+
+loadDashboard();
+
+alert("Semua data dihapus");
+
+}
+
+}
+
+/* ======================
+LOAD DASHBOARD
+====================== */
 
 function loadDashboard(){
 
-let trades = JSON.parse(localStorage.getItem("trades")) || [];
+let trades =
+JSON.parse(
+localStorage.getItem("trades")
+) || [];
+
+let startBalance =
+Number(
+localStorage.getItem(
+"startBalance"
+)
+) || 0;
+
+let balance = startBalance;
 
 let total = trades.length;
 
 let win = 0;
 let loss = 0;
-
-let balance = 1000;
 
 let balanceData = [];
 
@@ -471,15 +664,15 @@ let historyHTML = "";
 
 trades.forEach((t,i)=>{
 
-    balance += Number(t.profit);
+balance += Number(t.profit);
 
-    balanceData.push(balance);
+balanceData.push(balance);
 
-    if(t.result == "Win"){
-        win++;
-    }else{
-        loss++;
-    }
+if(t.result == "Win"){
+win++;
+}else{
+loss++;
+}
 
 historyHTML += `
 
@@ -498,7 +691,13 @@ TP : ${t.tp}<br>
 RR : 1:${t.rr}<br>
 
 Result :
-<span class="${t.result=='Win'?'win':'loss'}">
+<span class="${
+t.result == 'Win'
+?
+'win'
+:
+'loss'
+}">
 ${t.result}
 </span><br>
 
@@ -506,7 +705,11 @@ Profit : $${t.profit}<br>
 
 Catatan : ${t.note}<br>
 
-${t.image ? `<img src="${t.image}">` : ""}
+${t.image ?
+`<img src="${t.image}">`
+:
+""
+}
 
 <button class="deleteBtn"
 onclick="deleteTrade(${i})">
@@ -525,36 +728,67 @@ let winrate = 0;
 
 if(total > 0){
 
-winrate = ((win/total)*100).toFixed(1);
+winrate =
+((win / total) * 100)
+.toFixed(1);
 
 }
 
-document.getElementById("balance")
-.innerHTML = "Balance : $" + balance;
+document.getElementById(
+"balance"
+).innerHTML =
+"Balance : $" +
+balance.toFixed(2);
 
-document.getElementById("winrate")
-.innerHTML = "Winrate : " + winrate + "%";
+document.getElementById(
+"profitStat"
+).innerHTML =
+"Total Profit : $" +
+(balance - startBalance)
+.toFixed(2);
 
-document.getElementById("total")
-.innerHTML = "Total Trade : " + total;
+document.getElementById(
+"winrate"
+).innerHTML =
+"Winrate : " +
+winrate + "%";
 
-document.getElementById("tradeHistory")
-.innerHTML = historyHTML;
+document.getElementById(
+"total"
+).innerHTML =
+"Total Trade : " +
+total;
 
-loadCharts(balanceData,win,loss);
+document.getElementById(
+"tradeHistory"
+).innerHTML =
+historyHTML;
+
+loadCharts(
+balanceData,
+win,
+loss
+);
 
 }
 
-/* =========================
-   CHART
-========================= */
+/* ======================
+CHART
+====================== */
 
-function loadCharts(balanceData,win,loss){
+function loadCharts(
+balanceData,
+win,
+loss
+){
 
-const ctx1 = document.getElementById("equityChart");
+const ctx1 =
+document.getElementById(
+"equityChart"
+);
 
 if(equityChart){
-    equityChart.destroy();
+equityChart.destroy();
 }
 
 equityChart = new Chart(ctx1,{
@@ -562,20 +796,30 @@ equityChart = new Chart(ctx1,{
 type:'line',
 
 data:{
-labels:balanceData.map((x,i)=>"T"+(i+1)),
+labels:
+balanceData.map(
+(x,i)=>"T"+(i+1)
+),
+
 datasets:[{
+
 label:'Equity',
 data:balanceData,
 tension:0.4
+
 }]
+
 }
 
 });
 
-const ctx2 = document.getElementById("pieChart");
+const ctx2 =
+document.getElementById(
+"pieChart"
+);
 
 if(pieChart){
-    pieChart.destroy();
+pieChart.destroy();
 }
 
 pieChart = new Chart(ctx2,{
@@ -593,15 +837,19 @@ data:[win,loss]
 
 }
 
-/* =========================
-   AI ANALYSIS
-========================= */
+/* ======================
+AI ANALYSIS
+====================== */
 
 function runAI(){
 
-let trades = JSON.parse(localStorage.getItem("trades")) || [];
+let trades =
+JSON.parse(
+localStorage.getItem("trades")
+) || [];
 
-let total = trades.length;
+let total =
+trades.length;
 
 let win = 0;
 
@@ -613,36 +861,39 @@ if(t.result == "Win"){
 win++;
 }
 
-totalProfit += Number(t.profit);
+totalProfit +=
+Number(t.profit);
 
 });
 
 let winrate = 0;
 
 if(total > 0){
-winrate = (win/total)*100;
+
+winrate =
+(win / total) * 100;
+
 }
 
 let result = "";
 
 if(total == 0){
 
-result = `
-Belum ada data trading.
-`;
+result =
+"Belum ada data trading.";
 
 }
 else if(winrate >= 70){
 
 result = `
 
-🔥 Performa trading sangat bagus.<br><br>
+🔥 Trading sangat bagus.<br><br>
 
-✅ Winrate tinggi<br>
-✅ Risk management cukup baik<br>
-✅ Trading psychology stabil<br><br>
+✅ Konsisten profit<br>
+✅ Psikologi trading stabil<br>
+✅ Risk management baik<br><br>
 
-Tetap fokus pada setup terbaik dan hindari overtrading.
+Tetap fokus pada setup terbaik.
 
 `;
 
@@ -651,13 +902,12 @@ else if(winrate >= 50){
 
 result = `
 
-📈 Trading sudah cukup stabil.<br><br>
+📈 Trading cukup stabil.<br><br>
 
-✅ Sudah memiliki konsistensi<br>
-⚠️ Masih perlu meningkatkan kualitas entry<br>
+⚠️ Masih perlu meningkatkan entry<br>
 ⚠️ Hindari entry karena emosi<br><br>
 
-Fokus pada disiplin dan manajemen risiko.
+Fokus pada disiplin trading.
 
 `;
 
@@ -666,13 +916,13 @@ else{
 
 result = `
 
-⚠️ Trading masih perlu diperbaiki.<br><br>
+⚠️ Trading masih lemah.<br><br>
 
-❌ Winrate masih rendah<br>
-❌ Kemungkinan overtrading<br>
-❌ Entry belum konsisten<br><br>
+❌ Entry belum konsisten<br>
+❌ Risk management kurang baik<br>
+❌ Kemungkinan overtrading<br><br>
 
-Kurangi entry random dan fokus pada setup berkualitas.
+Kurangi trading random.
 
 `;
 
@@ -682,30 +932,45 @@ result += `
 
 <hr style="margin:15px 0;">
 
-📊 Total Trade : ${total}<br>
-🏆 Winrate : ${winrate.toFixed(1)}%<br>
-💰 Total Profit : $${totalProfit}
+📊 Total Trade :
+${total}<br>
+
+🏆 Winrate :
+${winrate.toFixed(1)}%<br>
+
+💰 Total Profit :
+$${totalProfit}
 
 `;
 
-document.getElementById("aiBox")
-.innerHTML = result;
+document.getElementById(
+"aiBox"
+).innerHTML = result;
 
 }
 
-/* =========================
-   PDF REPORT
-========================= */
+/* ======================
+PDF
+====================== */
 
 async function downloadPDF(){
 
-const { jsPDF } = window.jspdf;
+const { jsPDF } =
+window.jspdf;
 
-let pdf = new jsPDF();
+let pdf =
+new jsPDF();
 
-pdf.text("FC Trader Pro AI",20,20);
+pdf.text(
+"FC Trader Pro AI",
+20,
+20
+);
 
-let trades = JSON.parse(localStorage.getItem("trades")) || [];
+let trades =
+JSON.parse(
+localStorage.getItem("trades")
+) || [];
 
 let y = 40;
 
@@ -725,23 +990,38 @@ y += 10;
 
 });
 
-pdf.save("FC-Trader-Report.pdf");
+pdf.save(
+"FC-Trader-Report.pdf"
+);
 
 }
 
-/* =========================
-   AUTO LOGIN
-========================= */
+/* ======================
+AUTO LOGIN
+====================== */
 
 window.onload = function(){
 
-if(localStorage.getItem("userEmail")){
+document.getElementById(
+"startBalance"
+).value =
+localStorage.getItem(
+"startBalance"
+) || "";
 
-document.getElementById("loginPage")
-.classList.add("hidden");
+if(
+localStorage.getItem(
+"userEmail"
+)
+){
 
-document.getElementById("appPage")
-.classList.remove("hidden");
+document.getElementById(
+"loginPage"
+).classList.add("hidden");
+
+document.getElementById(
+"appPage"
+).classList.remove("hidden");
 
 loadDashboard();
 
