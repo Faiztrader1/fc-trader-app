@@ -5,16 +5,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FC Trader Pro AI ULTRA</title>
+<title>FC Trader Pro AI PREMIUM</title>
 
 <!-- CHART -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- AXIOS -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <style>
 
@@ -24,10 +21,10 @@
 --card:#111827;
 --input:#1e293b;
 --text:#ffffff;
+--border:#334155;
 --green:#22c55e;
 --red:#ef4444;
 --blue:#3b82f6;
---border:#334155;
 
 }
 
@@ -66,14 +63,21 @@ align-items:center;
 position:sticky;
 top:0;
 z-index:999;
-box-shadow:0 0 15px rgba(0,0,0,0.3);
+border-bottom:1px solid var(--border);
 
 }
 
 .logo{
 
-font-size:24px;
+font-size:23px;
 font-weight:bold;
+
+}
+
+.topButtons{
+
+display:flex;
+gap:10px;
 
 }
 
@@ -94,14 +98,12 @@ background:var(--card);
 padding:20px;
 border-radius:22px;
 border:1px solid var(--border);
-box-shadow:0 0 20px rgba(0,0,0,0.15);
 
 }
 
 h2{
 
 margin-bottom:15px;
-font-size:22px;
 
 }
 
@@ -137,14 +139,7 @@ border-radius:14px;
 font-size:15px;
 font-weight:bold;
 cursor:pointer;
-margin-top:14px;
-transition:0.2s;
-
-}
-
-button:hover{
-
-opacity:0.9;
+margin-top:12px;
 
 }
 
@@ -165,35 +160,8 @@ color:white;
 
 .stats{
 
-line-height:2.1;
+line-height:2;
 font-size:17px;
-
-}
-
-.marketBox{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:14px;
-margin-top:12px;
-
-}
-
-.marketName{
-
-font-weight:bold;
-font-size:18px;
-
-}
-
-.marketPrice{
-
-font-size:20px;
-font-weight:bold;
-color:#22c55e;
 
 }
 
@@ -201,7 +169,7 @@ color:#22c55e;
 
 background:rgba(255,255,255,0.04);
 padding:15px;
-border-radius:16px;
+border-radius:15px;
 margin-top:14px;
 line-height:1.9;
 
@@ -234,29 +202,38 @@ font-weight:bold;
 canvas{
 
 background:white;
-border-radius:16px;
 padding:10px;
+border-radius:14px;
 
 }
 
 img{
 
 width:100%;
+margin-top:10px;
 border-radius:12px;
-margin-top:12px;
-
-}
-
-.footer{
-
-text-align:center;
-padding:40px;
-opacity:0.6;
 
 }
 
 .hidden{
 display:none;
+}
+
+.footer{
+
+text-align:center;
+padding:35px;
+opacity:0.6;
+
+}
+
+.userBox{
+
+padding:14px;
+border-radius:14px;
+background:rgba(255,255,255,0.05);
+line-height:2;
+
 }
 
 </style>
@@ -269,54 +246,94 @@ display:none;
 <div class="topbar">
 
 <div class="logo">
-FC Trader Pro AI ULTRA
+FC Trader Pro AI PREMIUM
 </div>
 
-<button class="blue"
+<div class="topButtons">
+
+<button
+class="blue"
 onclick="toggleTheme()">
 
-🌙 / ☀ MODE
+🌙 / ☀
+
+</button>
+
+<button
+class="red"
+onclick="logout()">
+
+LOGOUT
 
 </button>
 
 </div>
 
-<!-- APP -->
+</div>
 
-<div class="container">
+<!-- LOGIN PAGE -->
 
-<!-- MARKET -->
+<div id="loginPage"
+class="container">
 
 <div class="card">
 
-<h2>Realtime Market</h2>
+<h2>Login / Sign Up</h2>
 
-<div class="marketBox">
+<input
+id="email"
+placeholder="Masukkan Gmail">
 
-<div class="marketName">
-BTC / USD
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+<button
+class="green"
+onclick="signup()">
+
+SIGN UP
+
+</button>
+
+<button
+class="blue"
+onclick="login()">
+
+LOGIN
+
+</button>
+
 </div>
 
-<div class="marketPrice"
-id="btcPrice">
-
-Loading...
-
 </div>
 
+<!-- APP -->
+
+<div id="appPage"
+class="hidden">
+
+<div class="container">
+
+<!-- USER -->
+
+<div class="card">
+
+<h2>User Account</h2>
+
+<div class="userBox">
+
+<div id="userEmail">
+Email : -
 </div>
 
-<div class="marketBox">
-
-<div class="marketName">
-XAU / USD
+<div>
+Storage : Unlimited Local Data
 </div>
 
-<div class="marketPrice"
-id="goldPrice">
-
-Loading...
-
+<div>
+Status : Premium Active
 </div>
 
 </div>
@@ -332,7 +349,7 @@ Loading...
 <input
 id="startBalance"
 type="number"
-placeholder="Masukkan Modal Awal">
+placeholder="Modal Awal">
 
 <button
 class="green"
@@ -391,18 +408,18 @@ id="pair"
 placeholder="Pair Trading">
 
 <input
-type="number"
 id="entry"
+type="number"
 placeholder="Entry">
 
 <input
-type="number"
 id="sl"
+type="number"
 placeholder="Stop Loss">
 
 <input
-type="number"
 id="tp"
+type="number"
 placeholder="Take Profit">
 
 <select id="result">
@@ -413,8 +430,8 @@ placeholder="Take Profit">
 </select>
 
 <input
-type="number"
 id="profit"
+type="number"
 placeholder="Profit / Loss">
 
 <textarea
@@ -422,7 +439,9 @@ id="note"
 placeholder="Catatan Trading...">
 </textarea>
 
-<input type="file" id="image">
+<input
+type="file"
+id="image">
 
 <button
 class="green"
@@ -444,7 +463,7 @@ SAVE TRADE
 
 </div>
 
-<!-- PIE -->
+<!-- WIN LOSS -->
 
 <div class="card">
 
@@ -512,10 +531,14 @@ RESET ALL DATA
 </div>
 
 <div class="footer">
-FC Trader Pro AI ULTRA © 2026
+FC Trader Pro AI PREMIUM © 2026
+</div>
+
 </div>
 
 <script>
+
+let currentUser = "";
 
 let equityChart;
 let pieChart;
@@ -540,6 +563,138 @@ document.body.classList.contains("light")
 }
 
 /* =========================
+SIGNUP
+========================= */
+
+function signup(){
+
+let email =
+document.getElementById(
+"email"
+).value;
+
+let password =
+document.getElementById(
+"password"
+).value;
+
+if(email == "" || password == ""){
+
+alert("Isi email dan password");
+
+return;
+
+}
+
+let users =
+JSON.parse(
+localStorage.getItem("users")
+) || [];
+
+let check =
+users.find(
+u => u.email == email
+);
+
+if(check){
+
+alert("Email sudah digunakan");
+
+return;
+
+}
+
+users.push({
+
+email,
+password
+
+});
+
+localStorage.setItem(
+"users",
+JSON.stringify(users)
+);
+
+alert("Sign Up berhasil");
+
+}
+
+/* =========================
+LOGIN
+========================= */
+
+function login(){
+
+let email =
+document.getElementById(
+"email"
+).value;
+
+let password =
+document.getElementById(
+"password"
+).value;
+
+let users =
+JSON.parse(
+localStorage.getItem("users")
+) || [];
+
+let user =
+users.find(
+u =>
+u.email == email &&
+u.password == password
+);
+
+if(user){
+
+currentUser = email;
+
+localStorage.setItem(
+"currentUser",
+email
+);
+
+document.getElementById(
+"loginPage"
+).classList.add("hidden");
+
+document.getElementById(
+"appPage"
+).classList.remove("hidden");
+
+document.getElementById(
+"userEmail"
+).innerHTML =
+"Email : " + email;
+
+loadDashboard();
+
+}else{
+
+alert("Login gagal");
+
+}
+
+}
+
+/* =========================
+LOGOUT
+========================= */
+
+function logout(){
+
+localStorage.removeItem(
+"currentUser"
+);
+
+location.reload();
+
+}
+
+/* =========================
 SAVE BALANCE
 ========================= */
 
@@ -552,16 +707,8 @@ document.getElementById(
 ).value
 );
 
-if(balance <= 0){
-
-alert("Masukkan modal");
-
-return;
-
-}
-
 localStorage.setItem(
-"fc_balance",
+"balance_" + currentUser,
 balance
 );
 
@@ -580,14 +727,9 @@ function saveTrade(){
 let trades =
 JSON.parse(
 localStorage.getItem(
-"fc_trades"
+"trades_" + currentUser
 )
 ) || [];
-
-let editIndex =
-document.getElementById(
-"editIndex"
-).value;
 
 let imageInput =
 document.getElementById(
@@ -653,7 +795,6 @@ document.getElementById(
 entry,
 sl,
 tp,
-
 rr,
 
 result:
@@ -677,13 +818,10 @@ image
 
 };
 
-if(trade.pair == ""){
-
-alert("Isi data trading");
-
-return;
-
-}
+let editIndex =
+document.getElementById(
+"editIndex"
+).value;
 
 if(editIndex == ""){
 
@@ -696,8 +834,11 @@ trades[editIndex] = trade;
 }
 
 localStorage.setItem(
-"fc_trades",
+
+"trades_" + currentUser,
+
 JSON.stringify(trades)
+
 );
 
 clearForm();
@@ -705,88 +846,6 @@ clearForm();
 loadDashboard();
 
 alert("Trade berhasil disimpan");
-
-}
-
-/* =========================
-EDIT TRADE
-========================= */
-
-function editTrade(i){
-
-let trades =
-JSON.parse(
-localStorage.getItem(
-"fc_trades"
-)
-) || [];
-
-let t = trades[i];
-
-document.getElementById(
-"editIndex"
-).value = i;
-
-document.getElementById(
-"date"
-).value = t.date;
-
-document.getElementById(
-"pair"
-).value = t.pair;
-
-document.getElementById(
-"entry"
-).value = t.entry;
-
-document.getElementById(
-"sl"
-).value = t.sl;
-
-document.getElementById(
-"tp"
-).value = t.tp;
-
-document.getElementById(
-"result"
-).value = t.result;
-
-document.getElementById(
-"profit"
-).value = t.profit;
-
-document.getElementById(
-"note"
-).value = t.note;
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
-
-}
-
-/* =========================
-DELETE TRADE
-========================= */
-
-function deleteTrade(i){
-
-let trades =
-JSON.parse(
-localStorage.getItem(
-"fc_trades"
-)
-) || [];
-
-trades.splice(i,1);
-
-localStorage.setItem(
-"fc_trades",
-JSON.stringify(trades)
-);
-
-loadDashboard();
 
 }
 
@@ -799,14 +858,14 @@ function loadDashboard(){
 let trades =
 JSON.parse(
 localStorage.getItem(
-"fc_trades"
+"trades_" + currentUser
 )
 ) || [];
 
 let startBalance =
 Number(
 localStorage.getItem(
-"fc_balance"
+"balance_" + currentUser
 )
 ) || 0;
 
@@ -827,9 +886,9 @@ let monthly = 0;
 let win = 0;
 let loss = 0;
 
-let balanceData = [];
-
 let historyHTML = "";
+
+let balanceData = [];
 
 let today =
 new Date();
@@ -853,7 +912,8 @@ new Date(t.date);
 
 let diff =
 (today - tradeDate)
-/ (1000*60*60*24);
+/
+(1000*60*60*24);
 
 if(diff <= 1){
 
@@ -879,15 +939,20 @@ historyHTML += `
 
 <b>${t.pair}</b><br>
 
-Tanggal : ${t.date}<br>
+Tanggal :
+${t.date}<br>
 
-Entry : ${t.entry}<br>
+Entry :
+${t.entry}<br>
 
-SL : ${t.sl}<br>
+SL :
+${t.sl}<br>
 
-TP : ${t.tp}<br>
+TP :
+${t.tp}<br>
 
-RR : 1:${t.rr}<br>
+RR :
+1:${t.rr}<br>
 
 Result :
 <span class="${
@@ -1003,7 +1068,94 @@ loss
 }
 
 /* =========================
-CHARTS
+EDIT TRADE
+========================= */
+
+function editTrade(i){
+
+let trades =
+JSON.parse(
+localStorage.getItem(
+"trades_" + currentUser
+)
+) || [];
+
+let t = trades[i];
+
+document.getElementById(
+"editIndex"
+).value = i;
+
+document.getElementById(
+"date"
+).value = t.date;
+
+document.getElementById(
+"pair"
+).value = t.pair;
+
+document.getElementById(
+"entry"
+).value = t.entry;
+
+document.getElementById(
+"sl"
+).value = t.sl;
+
+document.getElementById(
+"tp"
+).value = t.tp;
+
+document.getElementById(
+"result"
+).value = t.result;
+
+document.getElementById(
+"profit"
+).value = t.profit;
+
+document.getElementById(
+"note"
+).value = t.note;
+
+window.scrollTo({
+
+top:0,
+behavior:"smooth"
+
+});
+
+}
+
+/* =========================
+DELETE
+========================= */
+
+function deleteTrade(i){
+
+let trades =
+JSON.parse(
+localStorage.getItem(
+"trades_" + currentUser
+)
+) || [];
+
+trades.splice(i,1);
+
+localStorage.setItem(
+
+"trades_" + currentUser,
+
+JSON.stringify(trades)
+
+);
+
+loadDashboard();
+
+}
+
+/* =========================
+CHART
 ========================= */
 
 function loadCharts(
@@ -1090,7 +1242,7 @@ function runAI(){
 let trades =
 JSON.parse(
 localStorage.getItem(
-"fc_trades"
+"trades_" + currentUser
 )
 ) || [];
 
@@ -1130,13 +1282,11 @@ else if(wr >= 70){
 
 text = `
 
-🔥 Trading Sangat Bagus<br><br>
+🔥 Trading sangat bagus<br><br>
 
 ✅ Konsisten profit<br>
-✅ Entry disiplin<br>
-✅ Risk management bagus<br><br>
-
-Tetap fokus pada setup terbaik.
+✅ Risk management baik<br>
+✅ Psikologi trading stabil
 
 `;
 
@@ -1145,10 +1295,9 @@ else if(wr >= 50){
 
 text = `
 
-📈 Trading Cukup Stabil<br><br>
+📈 Trading cukup stabil<br><br>
 
-⚠️ Masih perlu konsistensi<br>
-⚠️ Hindari overtrading
+⚠️ Masih perlu disiplin entry
 
 `;
 
@@ -1157,11 +1306,10 @@ else{
 
 text = `
 
-⚠️ Trading Masih Lemah<br><br>
+⚠️ Trading masih lemah<br><br>
 
-❌ Entry random<br>
-❌ Emosi tinggi<br>
-❌ Risk management kurang
+❌ Overtrading<br>
+❌ Entry random
 
 `;
 
@@ -1189,47 +1337,7 @@ document.getElementById(
 }
 
 /* =========================
-REALTIME MARKET
-========================= */
-
-async function loadMarket(){
-
-try{
-
-let btc =
-await axios.get(
-"https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
-);
-
-document.getElementById(
-"btcPrice"
-).innerHTML =
-"$" +
-Number(
-btc.data.price
-).toLocaleString();
-
-let gold =
-1900 + Math.random()*120;
-
-document.getElementById(
-"goldPrice"
-).innerHTML =
-"$" +
-gold.toFixed(2);
-
-}catch(err){
-
-console.log(err);
-
-}
-
-}
-
-setInterval(loadMarket,5000);
-
-/* =========================
-EXPORT PDF
+PDF
 ========================= */
 
 async function downloadPDF(){
@@ -1243,7 +1351,7 @@ new jsPDF();
 pdf.setFontSize(18);
 
 pdf.text(
-"FC Trader Pro AI ULTRA",
+"FC Trader Pro AI PREMIUM",
 20,
 20
 );
@@ -1251,7 +1359,7 @@ pdf.text(
 let trades =
 JSON.parse(
 localStorage.getItem(
-"fc_trades"
+"trades_" + currentUser
 )
 ) || [];
 
@@ -1276,7 +1384,7 @@ y += 10;
 });
 
 pdf.save(
-"FC-Trader-Pro-AI-ULTRA.pdf"
+"FC-Trader-Pro-AI-PREMIUM.pdf"
 );
 
 }
@@ -1289,18 +1397,16 @@ function resetAll(){
 
 let yes =
 confirm(
-"Yakin hapus semua data?"
+"Yakin reset semua data?"
 );
 
 if(yes){
 
 localStorage.removeItem(
-"fc_trades"
+"trades_" + currentUser
 );
 
 loadDashboard();
-
-alert("Semua data dihapus");
 
 }
 
@@ -1351,7 +1457,7 @@ document.getElementById(
 }
 
 /* =========================
-AUTO LOAD
+AUTO LOGIN
 ========================= */
 
 window.onload = function(){
@@ -1367,9 +1473,31 @@ document.body.classList.add(
 
 }
 
+let savedUser =
+localStorage.getItem(
+"currentUser"
+);
+
+if(savedUser){
+
+currentUser = savedUser;
+
+document.getElementById(
+"loginPage"
+).classList.add("hidden");
+
+document.getElementById(
+"appPage"
+).classList.remove("hidden");
+
+document.getElementById(
+"userEmail"
+).innerHTML =
+"Email : " + currentUser;
+
 loadDashboard();
 
-loadMarket();
+}
 
 }
 
