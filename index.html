@@ -49,7 +49,9 @@ body{
     box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
-input,select{
+input,
+select,
+textarea{
     width:100%;
     padding:14px;
     margin-top:12px;
@@ -57,8 +59,12 @@ input,select{
     border-radius:12px;
     background:#334155;
     color:white;
-    box-sizing:border-box;
     font-size:16px;
+}
+
+textarea{
+    min-height:100px;
+    resize:none;
 }
 
 button{
@@ -78,6 +84,10 @@ button:hover{
     opacity:0.9;
 }
 
+.deleteBtn{
+    background:#ef4444;
+}
+
 .stat{
     margin-top:10px;
     font-size:18px;
@@ -88,7 +98,7 @@ button:hover{
     padding:15px;
     border-radius:14px;
     margin-top:15px;
-    line-height:1.7;
+    line-height:1.8;
 }
 
 .footer{
@@ -107,8 +117,8 @@ button:hover{
     background:#111827;
     padding:14px;
     border-radius:14px;
-    margin-top:10px;
-    line-height:1.7;
+    margin-top:12px;
+    line-height:1.8;
 }
 
 .win{
@@ -159,6 +169,7 @@ FC Trader Pro AI
 <h2 class="loginTitle">Login Trader</h2>
 
 <input id="email" placeholder="Email">
+
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">
@@ -199,20 +210,24 @@ Total Trade : 0
 
 <h2>Save Trading</h2>
 
+<input type="date" id="date">
+
 <input id="pair" placeholder="Pair">
 
-<input id="entry" placeholder="Entry">
+<input id="entry" type="number" placeholder="Entry">
 
-<input id="sl" placeholder="Stop Loss">
+<input id="sl" type="number" placeholder="Stop Loss">
 
-<input id="tp" placeholder="Take Profit">
+<input id="tp" type="number" placeholder="Take Profit">
 
 <select id="result">
 <option>Win</option>
 <option>Loss</option>
 </select>
 
-<input id="profit" placeholder="Profit / Loss">
+<input id="profit" type="number" placeholder="Profit / Loss">
+
+<textarea id="note" placeholder="Catatan Trading..."></textarea>
 
 <input type="file" id="image">
 
@@ -336,16 +351,29 @@ if(email == savedEmail && password == savedPassword){
 
 function saveTrade(){
 
+let date = document.getElementById("date").value;
 let pair = document.getElementById("pair").value;
-let entry = document.getElementById("entry").value;
-let sl = document.getElementById("sl").value;
-let tp = document.getElementById("tp").value;
+let entry = Number(document.getElementById("entry").value);
+let sl = Number(document.getElementById("sl").value);
+let tp = Number(document.getElementById("tp").value);
 let result = document.getElementById("result").value;
-let profit = document.getElementById("profit").value;
+let profit = Number(document.getElementById("profit").value);
+let note = document.getElementById("note").value;
 
 if(pair == "" || entry == ""){
     alert("Isi data terlebih dahulu");
     return;
+}
+
+let rr = 0;
+
+if(entry != sl){
+
+rr = (
+Math.abs(tp - entry) /
+Math.abs(entry - sl)
+).toFixed(2);
+
 }
 
 let trades = JSON.parse(localStorage.getItem("trades")) || [];
@@ -362,12 +390,15 @@ if(imageInput.files[0]){
 
 trades.push({
 
+    date,
     pair,
     entry,
     sl,
     tp,
+    rr,
     result,
-    profit:Number(profit),
+    profit,
+    note,
     image:imageUrl
 
 });
@@ -375,6 +406,45 @@ trades.push({
 localStorage.setItem("trades",JSON.stringify(trades));
 
 alert("Trade Saved");
+
+clearForm();
+
+loadDashboard();
+
+}
+
+/* =========================
+   CLEAR FORM
+========================= */
+
+function clearForm(){
+
+document.getElementById("date").value = "";
+document.getElementById("pair").value = "";
+document.getElementById("entry").value = "";
+document.getElementById("sl").value = "";
+document.getElementById("tp").value = "";
+document.getElementById("profit").value = "";
+document.getElementById("note").value = "";
+document.getElementById("image").value = "";
+
+}
+
+/* =========================
+   DELETE TRADE
+========================= */
+
+function deleteTrade(index){
+
+let trades =
+JSON.parse(localStorage.getItem("trades")) || [];
+
+trades.splice(index,1);
+
+localStorage.setItem(
+"trades",
+JSON.stringify(trades)
+);
 
 loadDashboard();
 
@@ -399,7 +469,7 @@ let balanceData = [];
 
 let historyHTML = "";
 
-trades.forEach(t=>{
+trades.forEach((t,i)=>{
 
     balance += Number(t.profit);
 
@@ -411,35 +481,52 @@ trades.forEach(t=>{
         loss++;
     }
 
-    historyHTML += `
+historyHTML += `
 
-    <div class="tradeItem">
+<div class="tradeItem">
 
-    <b>${t.pair}</b><br>
+<b>${t.pair}</b><br>
 
-    Entry : ${t.entry}<br>
-    SL : ${t.sl}<br>
-    TP : ${t.tp}<br>
+Tanggal : ${t.date}<br>
 
-    Result :
-    <span class="${t.result=='Win'?'win':'loss'}">
-    ${t.result}
-    </span><br>
+Entry : ${t.entry}<br>
 
-    Profit : $${t.profit}
+SL : ${t.sl}<br>
 
-    ${t.image ? `<img src="${t.image}">` : ""}
+TP : ${t.tp}<br>
 
-    </div>
+RR : 1:${t.rr}<br>
 
-    `;
+Result :
+<span class="${t.result=='Win'?'win':'loss'}">
+${t.result}
+</span><br>
+
+Profit : $${t.profit}<br>
+
+Catatan : ${t.note}<br>
+
+${t.image ? `<img src="${t.image}">` : ""}
+
+<button class="deleteBtn"
+onclick="deleteTrade(${i})">
+
+DELETE TRADE
+
+</button>
+
+</div>
+
+`;
 
 });
 
 let winrate = 0;
 
 if(total > 0){
-    winrate = ((win/total)*100).toFixed(1);
+
+winrate = ((win/total)*100).toFixed(1);
+
 }
 
 document.getElementById("balance")
@@ -472,16 +559,16 @@ if(equityChart){
 
 equityChart = new Chart(ctx1,{
 
-    type:'line',
+type:'line',
 
-    data:{
-        labels:balanceData.map((x,i)=>"T"+(i+1)),
-        datasets:[{
-            label:'Equity',
-            data:balanceData,
-            tension:0.4
-        }]
-    }
+data:{
+labels:balanceData.map((x,i)=>"T"+(i+1)),
+datasets:[{
+label:'Equity',
+data:balanceData,
+tension:0.4
+}]
+}
 
 });
 
@@ -493,14 +580,14 @@ if(pieChart){
 
 pieChart = new Chart(ctx2,{
 
-    type:'pie',
+type:'pie',
 
-    data:{
-        labels:['Win','Loss'],
-        datasets:[{
-            data:[win,loss]
-        }]
-    }
+data:{
+labels:['Win','Loss'],
+datasets:[{
+data:[win,loss]
+}]
+}
 
 });
 
@@ -518,40 +605,91 @@ let total = trades.length;
 
 let win = 0;
 
+let totalProfit = 0;
+
 trades.forEach(t=>{
 
-    if(t.result == "Win"){
-        win++;
-    }
+if(t.result == "Win"){
+win++;
+}
+
+totalProfit += Number(t.profit);
 
 });
 
 let winrate = 0;
 
 if(total > 0){
-    winrate = (win/total)*100;
+winrate = (win/total)*100;
 }
 
 let result = "";
 
-if(winrate >= 70){
+if(total == 0){
 
-result =
-"Excellent performance.<br><br>Your trading psychology is stable and risk management is healthy. Continue focusing on high probability setup and avoid overtrading.";
+result = `
+Belum ada data trading.
+`;
 
-}else if(winrate >= 50){
+}
+else if(winrate >= 70){
 
-result =
-"Trading performance is stable.<br><br>Improve discipline and maintain proper risk management.";
+result = `
 
-}else{
+🔥 Performa trading sangat bagus.<br><br>
 
-result =
-"Trading performance still weak.<br><br>Reduce overtrading and improve setup quality.";
+✅ Winrate tinggi<br>
+✅ Risk management cukup baik<br>
+✅ Trading psychology stabil<br><br>
+
+Tetap fokus pada setup terbaik dan hindari overtrading.
+
+`;
+
+}
+else if(winrate >= 50){
+
+result = `
+
+📈 Trading sudah cukup stabil.<br><br>
+
+✅ Sudah memiliki konsistensi<br>
+⚠️ Masih perlu meningkatkan kualitas entry<br>
+⚠️ Hindari entry karena emosi<br><br>
+
+Fokus pada disiplin dan manajemen risiko.
+
+`;
+
+}
+else{
+
+result = `
+
+⚠️ Trading masih perlu diperbaiki.<br><br>
+
+❌ Winrate masih rendah<br>
+❌ Kemungkinan overtrading<br>
+❌ Entry belum konsisten<br><br>
+
+Kurangi entry random dan fokus pada setup berkualitas.
+
+`;
 
 }
 
-document.getElementById("aiBox").innerHTML = result;
+result += `
+
+<hr style="margin:15px 0;">
+
+📊 Total Trade : ${total}<br>
+🏆 Winrate : ${winrate.toFixed(1)}%<br>
+💰 Total Profit : $${totalProfit}
+
+`;
+
+document.getElementById("aiBox")
+.innerHTML = result;
 
 }
 
@@ -575,7 +713,7 @@ trades.forEach((t,i)=>{
 
 pdf.text(
 
-`${i+1}. ${t.pair} | ${t.result} | Profit: $${t.profit}`,
+`${i+1}. ${t.date} | ${t.pair} | ${t.result} | RR 1:${t.rr} | Profit $${t.profit}`,
 
 20,
 
