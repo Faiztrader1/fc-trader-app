@@ -6,12 +6,20 @@
 
 <title>FC Trader Pro AI</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 
-body{
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
     font-family:Arial,sans-serif;
-    background:#0f172a;
+    background:#020617;
     color:white;
 }
 
@@ -22,10 +30,13 @@ body{
     font-size:24px;
     font-weight:bold;
     box-shadow:0 2px 10px rgba(0,0,0,0.4);
+    position:sticky;
+    top:0;
+    z-index:999;
 }
 
 .container{
-    max-width:500px;
+    max-width:700px;
     margin:auto;
     padding:20px;
 }
@@ -38,7 +49,7 @@ body{
     box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
-input{
+input,select{
     width:100%;
     padding:14px;
     margin-top:12px;
@@ -85,6 +96,47 @@ button:hover{
     margin-top:30px;
     opacity:0.7;
     font-size:14px;
+    padding-bottom:40px;
+}
+
+.hidden{
+    display:none;
+}
+
+.tradeItem{
+    background:#111827;
+    padding:14px;
+    border-radius:14px;
+    margin-top:10px;
+    line-height:1.7;
+}
+
+.win{
+    color:#22c55e;
+    font-weight:bold;
+}
+
+.loss{
+    color:#ef4444;
+    font-weight:bold;
+}
+
+canvas{
+    background:white;
+    border-radius:14px;
+    margin-top:20px;
+    padding:10px;
+}
+
+.loginTitle{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+img{
+    width:100%;
+    margin-top:10px;
+    border-radius:12px;
 }
 
 </style>
@@ -98,13 +150,48 @@ FC Trader Pro AI
 
 <div class="container">
 
+<!-- LOGIN -->
+
+<div id="loginPage">
+
+<div class="card">
+
+<h2 class="loginTitle">Login Trader</h2>
+
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">
+LOGIN
+</button>
+
+<button onclick="register()">
+REGISTER
+</button>
+
+</div>
+
+</div>
+
+<!-- APP -->
+
+<div id="appPage" class="hidden">
+
 <div class="card">
 
 <h2>Trading Journal</h2>
 
-<div class="stat">Balance : $1,250</div>
-<div class="stat">Winrate : 72%</div>
-<div class="stat">Total Trade : 31</div>
+<div class="stat" id="balance">
+Balance : $1000
+</div>
+
+<div class="stat" id="winrate">
+Winrate : 0%
+</div>
+
+<div class="stat" id="total">
+Total Trade : 0
+</div>
 
 </div>
 
@@ -113,11 +200,21 @@ FC Trader Pro AI
 <h2>Save Trading</h2>
 
 <input id="pair" placeholder="Pair">
+
 <input id="entry" placeholder="Entry">
+
 <input id="sl" placeholder="Stop Loss">
+
 <input id="tp" placeholder="Take Profit">
-<input id="result" placeholder="Win / Loss">
+
+<select id="result">
+<option>Win</option>
+<option>Loss</option>
+</select>
+
 <input id="profit" placeholder="Profit / Loss">
+
+<input type="file" id="image">
 
 <button onclick="saveTrade()">
 SAVE TRADE
@@ -127,27 +224,49 @@ SAVE TRADE
 
 <div class="card">
 
-<h2>AI Trading Analysis</h2>
+<h2>Equity Curve</h2>
 
-<div class="aiBox">
-
-Excellent performance.<br><br>
-
-Your trading psychology is stable and risk management is healthy. Continue focusing on high probability setup and avoid overtrading.
-
-</div>
+<canvas id="equityChart"></canvas>
 
 </div>
 
 <div class="card">
 
-<h2>Trading Notes</h2>
+<h2>Win vs Loss</h2>
 
-<div class="aiBox">
-
-“Patience pays more than prediction.”
+<canvas id="pieChart"></canvas>
 
 </div>
+
+<div class="card">
+
+<h2>AI Trading Analysis</h2>
+
+<div class="aiBox" id="aiBox">
+
+Waiting analysis...
+
+</div>
+
+<button onclick="runAI()">
+RUN AI ANALYSIS
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Trade History</h2>
+
+<div id="tradeHistory"></div>
+
+</div>
+
+<div class="card">
+
+<button onclick="downloadPDF()">
+EXPORT PDF REPORT
+</button>
 
 </div>
 
@@ -157,7 +276,63 @@ FC Trader Pro AI © 2026
 
 </div>
 
+</div>
+
 <script>
+
+let equityChart;
+let pieChart;
+
+/* =========================
+   LOGIN
+========================= */
+
+function register(){
+
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
+
+if(email == "" || password == ""){
+    alert("Isi email dan password");
+    return;
+}
+
+localStorage.setItem("userEmail",email);
+localStorage.setItem("userPassword",password);
+
+alert("Register berhasil");
+
+}
+
+function login(){
+
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
+
+let savedEmail = localStorage.getItem("userEmail");
+let savedPassword = localStorage.getItem("userPassword");
+
+if(email == savedEmail && password == savedPassword){
+
+    document.getElementById("loginPage")
+    .classList.add("hidden");
+
+    document.getElementById("appPage")
+    .classList.remove("hidden");
+
+    loadDashboard();
+
+}else{
+
+    alert("Login gagal");
+
+}
+
+}
+
+/* =========================
+   SAVE TRADE
+========================= */
 
 function saveTrade(){
 
@@ -168,20 +343,271 @@ let tp = document.getElementById("tp").value;
 let result = document.getElementById("result").value;
 let profit = document.getElementById("profit").value;
 
-if(pair === "" || entry === ""){
+if(pair == "" || entry == ""){
     alert("Isi data terlebih dahulu");
     return;
 }
 
-alert(
-"Trade Saved!\n\n" +
-"Pair: " + pair +
-"\nEntry: " + entry +
-"\nSL: " + sl +
-"\nTP: " + tp +
-"\nResult: " + result +
-"\nProfit: " + profit
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
+
+let imageInput = document.getElementById("image");
+
+let imageUrl = "";
+
+if(imageInput.files[0]){
+
+    imageUrl = URL.createObjectURL(imageInput.files[0]);
+
+}
+
+trades.push({
+
+    pair,
+    entry,
+    sl,
+    tp,
+    result,
+    profit:Number(profit),
+    image:imageUrl
+
+});
+
+localStorage.setItem("trades",JSON.stringify(trades));
+
+alert("Trade Saved");
+
+loadDashboard();
+
+}
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+function loadDashboard(){
+
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
+
+let total = trades.length;
+
+let win = 0;
+let loss = 0;
+
+let balance = 1000;
+
+let balanceData = [];
+
+let historyHTML = "";
+
+trades.forEach(t=>{
+
+    balance += Number(t.profit);
+
+    balanceData.push(balance);
+
+    if(t.result == "Win"){
+        win++;
+    }else{
+        loss++;
+    }
+
+    historyHTML += `
+
+    <div class="tradeItem">
+
+    <b>${t.pair}</b><br>
+
+    Entry : ${t.entry}<br>
+    SL : ${t.sl}<br>
+    TP : ${t.tp}<br>
+
+    Result :
+    <span class="${t.result=='Win'?'win':'loss'}">
+    ${t.result}
+    </span><br>
+
+    Profit : $${t.profit}
+
+    ${t.image ? `<img src="${t.image}">` : ""}
+
+    </div>
+
+    `;
+
+});
+
+let winrate = 0;
+
+if(total > 0){
+    winrate = ((win/total)*100).toFixed(1);
+}
+
+document.getElementById("balance")
+.innerHTML = "Balance : $" + balance;
+
+document.getElementById("winrate")
+.innerHTML = "Winrate : " + winrate + "%";
+
+document.getElementById("total")
+.innerHTML = "Total Trade : " + total;
+
+document.getElementById("tradeHistory")
+.innerHTML = historyHTML;
+
+loadCharts(balanceData,win,loss);
+
+}
+
+/* =========================
+   CHART
+========================= */
+
+function loadCharts(balanceData,win,loss){
+
+const ctx1 = document.getElementById("equityChart");
+
+if(equityChart){
+    equityChart.destroy();
+}
+
+equityChart = new Chart(ctx1,{
+
+    type:'line',
+
+    data:{
+        labels:balanceData.map((x,i)=>"T"+(i+1)),
+        datasets:[{
+            label:'Equity',
+            data:balanceData,
+            tension:0.4
+        }]
+    }
+
+});
+
+const ctx2 = document.getElementById("pieChart");
+
+if(pieChart){
+    pieChart.destroy();
+}
+
+pieChart = new Chart(ctx2,{
+
+    type:'pie',
+
+    data:{
+        labels:['Win','Loss'],
+        datasets:[{
+            data:[win,loss]
+        }]
+    }
+
+});
+
+}
+
+/* =========================
+   AI ANALYSIS
+========================= */
+
+function runAI(){
+
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
+
+let total = trades.length;
+
+let win = 0;
+
+trades.forEach(t=>{
+
+    if(t.result == "Win"){
+        win++;
+    }
+
+});
+
+let winrate = 0;
+
+if(total > 0){
+    winrate = (win/total)*100;
+}
+
+let result = "";
+
+if(winrate >= 70){
+
+result =
+"Excellent performance.<br><br>Your trading psychology is stable and risk management is healthy. Continue focusing on high probability setup and avoid overtrading.";
+
+}else if(winrate >= 50){
+
+result =
+"Trading performance is stable.<br><br>Improve discipline and maintain proper risk management.";
+
+}else{
+
+result =
+"Trading performance still weak.<br><br>Reduce overtrading and improve setup quality.";
+
+}
+
+document.getElementById("aiBox").innerHTML = result;
+
+}
+
+/* =========================
+   PDF REPORT
+========================= */
+
+async function downloadPDF(){
+
+const { jsPDF } = window.jspdf;
+
+let pdf = new jsPDF();
+
+pdf.text("FC Trader Pro AI",20,20);
+
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
+
+let y = 40;
+
+trades.forEach((t,i)=>{
+
+pdf.text(
+
+`${i+1}. ${t.pair} | ${t.result} | Profit: $${t.profit}`,
+
+20,
+
+y
+
 );
+
+y += 10;
+
+});
+
+pdf.save("FC-Trader-Report.pdf");
+
+}
+
+/* =========================
+   AUTO LOGIN
+========================= */
+
+window.onload = function(){
+
+if(localStorage.getItem("userEmail")){
+
+document.getElementById("loginPage")
+.classList.add("hidden");
+
+document.getElementById("appPage")
+.classList.remove("hidden");
+
+loadDashboard();
+
+}
 
 }
 
