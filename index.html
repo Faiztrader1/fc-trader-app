@@ -112,14 +112,14 @@ FC Trader Pro AI
 
 <h2>Save Trading</h2>
 
-<input placeholder="Pair">
-<input placeholder="Entry">
-<input placeholder="Stop Loss">
-<input placeholder="Take Profit">
-<input placeholder="Win / Loss">
-<input placeholder="Profit / Loss">
+<input id="pair" placeholder="Pair">
+<input id="entry" placeholder="Entry">
+<input id="sl" placeholder="Stop Loss">
+<input id="tp" placeholder="Take Profit">
+<input id="result" placeholder="Win / Loss">
+<input id="profit" placeholder="Profit / Loss">
 
-<button>
+<button onclick="saveTrade()">
 SAVE TRADE
 </button>
 
@@ -156,6 +156,36 @@ FC Trader Pro AI © 2026
 </div>
 
 </div>
+
+<script>
+
+function saveTrade(){
+
+let pair = document.getElementById("pair").value;
+let entry = document.getElementById("entry").value;
+let sl = document.getElementById("sl").value;
+let tp = document.getElementById("tp").value;
+let result = document.getElementById("result").value;
+let profit = document.getElementById("profit").value;
+
+if(pair === "" || entry === ""){
+    alert("Isi data terlebih dahulu");
+    return;
+}
+
+alert(
+"Trade Saved!\n\n" +
+"Pair: " + pair +
+"\nEntry: " + entry +
+"\nSL: " + sl +
+"\nTP: " + tp +
+"\nResult: " + result +
+"\nProfit: " + profit
+);
+
+}
+
+</script>
 
 </body>
 </html>
