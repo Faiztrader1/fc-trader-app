@@ -6,193 +6,137 @@
 
 <title>FC Trader Pro AI</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#111827">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-font-family:Arial,sans-serif;
-background:#020617;
-color:white;
-padding-bottom:100px;
-}
-
-/* SPLASH SCREEN */
-
-#splash{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#020617;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:9999;
-}
-
-.loader{
-width:60px;
-height:60px;
-border:6px solid #334155;
-border-top:6px solid #22c55e;
-border-radius:50%;
-animation:spin 1s linear infinite;
-margin-top:20px;
-}
-
-@keyframes spin{
-100%{
-transform:rotate(360deg);
-}
+    font-family:Arial,sans-serif;
+    background:#020617;
+    color:white;
 }
 
 .topbar{
-background:#111827;
-padding:18px;
-font-size:22px;
-font-weight:bold;
-position:sticky;
-top:0;
-text-align:center;
-z-index:100;
-box-shadow:0 2px 10px rgba(0,0,0,0.4);
+    background:#111827;
+    padding:18px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    box-shadow:0 2px 10px rgba(0,0,0,0.4);
+    position:sticky;
+    top:0;
+    z-index:999;
 }
 
 .container{
-max-width:700px;
-margin:auto;
-padding:20px;
+    max-width:700px;
+    margin:auto;
+    padding:20px;
 }
 
 .card{
-background:#1e293b;
-padding:20px;
-border-radius:20px;
-margin-bottom:20px;
-box-shadow:0 0 20px rgba(0,0,0,0.3);
+    background:#1e293b;
+    padding:20px;
+    border-radius:20px;
+    margin-bottom:20px;
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
 input,select{
-width:100%;
-padding:14px;
-margin-top:12px;
-border:none;
-border-radius:12px;
-background:#334155;
-color:white;
-font-size:16px;
+    width:100%;
+    padding:14px;
+    margin-top:12px;
+    border:none;
+    border-radius:12px;
+    background:#334155;
+    color:white;
+    box-sizing:border-box;
+    font-size:16px;
 }
 
 button{
-width:100%;
-padding:14px;
-margin-top:15px;
-border:none;
-border-radius:14px;
-background:#22c55e;
-color:white;
-font-size:16px;
-font-weight:bold;
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    border:none;
+    border-radius:14px;
+    background:#22c55e;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.stat{
+    margin-top:10px;
+    font-size:18px;
 }
 
 .aiBox{
-background:#111827;
-padding:15px;
-border-radius:14px;
-margin-top:15px;
-line-height:1.7;
+    background:#111827;
+    padding:15px;
+    border-radius:14px;
+    margin-top:15px;
+    line-height:1.7;
 }
 
-.bottomNav{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-background:#111827;
-display:flex;
-justify-content:space-around;
-padding:14px;
-box-shadow:0 -2px 10px rgba(0,0,0,0.5);
-}
-
-.navBtn{
-color:white;
-font-size:14px;
-text-align:center;
-}
-
-.sidebar{
-position:fixed;
-left:-260px;
-top:0;
-width:250px;
-height:100%;
-background:#0f172a;
-padding:20px;
-transition:0.3s;
-z-index:1000;
-}
-
-.sidebar.active{
-left:0;
-}
-
-.sidebar button{
-margin-top:10px;
-}
-
-.menuBtn{
-position:absolute;
-left:15px;
-top:18px;
-font-size:24px;
-cursor:pointer;
+.footer{
+    text-align:center;
+    margin-top:30px;
+    opacity:0.7;
+    font-size:14px;
+    padding-bottom:40px;
 }
 
 .hidden{
-display:none;
+    display:none;
+}
+
+.tradeItem{
+    background:#111827;
+    padding:14px;
+    border-radius:14px;
+    margin-top:10px;
+    line-height:1.7;
+}
+
+.win{
+    color:#22c55e;
+    font-weight:bold;
+}
+
+.loss{
+    color:#ef4444;
+    font-weight:bold;
 }
 
 canvas{
-background:white;
-border-radius:14px;
-padding:10px;
-margin-top:20px;
+    background:white;
+    border-radius:14px;
+    margin-top:20px;
+    padding:10px;
 }
 
-.chatBox{
-height:200px;
-overflow:auto;
-background:#111827;
-padding:10px;
-border-radius:14px;
-margin-top:10px;
+.loginTitle{
+    text-align:center;
+    margin-bottom:20px;
 }
 
-.chatMsg{
-background:#334155;
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
-}
-
-.goldPrice{
-font-size:28px;
-font-weight:bold;
-margin-top:10px;
-color:#22c55e;
+img{
+    width:100%;
+    margin-top:10px;
+    border-radius:12px;
 }
 
 </style>
@@ -200,57 +144,67 @@ color:#22c55e;
 
 <body>
 
-<!-- SPLASH -->
-
-<div id="splash">
-<h1>FC Trader Pro AI</h1>
-<div class="loader"></div>
-</div>
-
-<!-- SIDEBAR -->
-
-<div class="sidebar" id="sidebar">
-<h2>Menu</h2>
-<button onclick="toggleSidebar()">Close</button>
-<button onclick="alert('Dashboard')">Dashboard</button>
-<button onclick="alert('Trading Journal')">Trading Journal</button>
-<button onclick="alert('AI Assistant')">AI Assistant</button>
-<button onclick="alert('Settings')">Settings</button>
-</div>
-
-<!-- TOPBAR -->
-
 <div class="topbar">
-<span class="menuBtn" onclick="toggleSidebar()">☰</span>
 FC Trader Pro AI
 </div>
 
 <div class="container">
 
-<!-- GOLD PRICE -->
+<!-- LOGIN -->
+
+<div id="loginPage">
 
 <div class="card">
-<h2>Live Gold Price</h2>
-<div class="goldPrice" id="goldPrice">$3345.20</div>
+
+<h2 class="loginTitle">Login Trader</h2>
+
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">
+LOGIN
+</button>
+
+<button onclick="register()">
+REGISTER
+</button>
+
 </div>
 
-<!-- DASHBOARD -->
+</div>
+
+<!-- APP -->
+
+<div id="appPage" class="hidden">
 
 <div class="card">
+
 <h2>Trading Journal</h2>
-<div id="balance">Balance : $1000</div>
-<div id="winrate">Winrate : 0%</div>
-<div id="total">Total Trade : 0</div>
+
+<div class="stat" id="balance">
+Balance : $1000
 </div>
 
-<!-- SAVE TRADE -->
+<div class="stat" id="winrate">
+Winrate : 0%
+</div>
+
+<div class="stat" id="total">
+Total Trade : 0
+</div>
+
+</div>
 
 <div class="card">
+
 <h2>Save Trading</h2>
 
 <input id="pair" placeholder="Pair">
+
 <input id="entry" placeholder="Entry">
+
 <input id="sl" placeholder="Stop Loss">
+
 <input id="tp" placeholder="Take Profit">
 
 <select id="result">
@@ -260,243 +214,402 @@ FC Trader Pro AI
 
 <input id="profit" placeholder="Profit / Loss">
 
+<input type="file" id="image">
+
 <button onclick="saveTrade()">
 SAVE TRADE
 </button>
+
 </div>
 
-<!-- EQUITY -->
-
 <div class="card">
+
 <h2>Equity Curve</h2>
+
 <canvas id="equityChart"></canvas>
+
 </div>
 
-<!-- AI ANALYSIS -->
+<div class="card">
+
+<h2>Win vs Loss</h2>
+
+<canvas id="pieChart"></canvas>
+
+</div>
 
 <div class="card">
+
 <h2>AI Trading Analysis</h2>
 
-<div class="aiBox" id="aiResult">
+<div class="aiBox" id="aiBox">
+
 Waiting analysis...
+
 </div>
 
 <button onclick="runAI()">
 RUN AI ANALYSIS
 </button>
+
 </div>
 
-<!-- AI CHAT -->
+<div class="card">
+
+<h2>Trade History</h2>
+
+<div id="tradeHistory"></div>
+
+</div>
 
 <div class="card">
-<h2>AI Assistant Chat</h2>
 
-<div class="chatBox" id="chatBox"></div>
-
-<input id="chatInput" placeholder="Ask AI...">
-
-<button onclick="sendChat()">
-SEND MESSAGE
+<button onclick="downloadPDF()">
+EXPORT PDF REPORT
 </button>
 
 </div>
 
+<div class="footer">
+FC Trader Pro AI © 2026
 </div>
 
-<!-- BOTTOM NAV -->
+</div>
 
-<div class="bottomNav">
-<div class="navBtn">🏠<br>Home</div>
-<div class="navBtn">📈<br>Trade</div>
-<div class="navBtn">🤖<br>AI</div>
-<div class="navBtn">⚙️<br>Settings</div>
 </div>
 
 <script>
 
-/* SPLASH */
+let equityChart;
+let pieChart;
 
-setTimeout(()=>{
-document.getElementById('splash').style.display='none';
-},2500);
+/* =========================
+   LOGIN
+========================= */
 
-/* SIDEBAR */
+function register(){
 
-function toggleSidebar(){
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
 
-let sidebar=document.getElementById('sidebar');
+if(email == "" || password == ""){
+    alert("Isi email dan password");
+    return;
+}
 
-sidebar.classList.toggle('active');
+localStorage.setItem("userEmail",email);
+localStorage.setItem("userPassword",password);
+
+alert("Register berhasil");
 
 }
 
-/* GOLD PRICE */
+function login(){
 
-function updateGold(){
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
 
-let random=(3300+Math.random()*100).toFixed(2);
+let savedEmail = localStorage.getItem("userEmail");
+let savedPassword = localStorage.getItem("userPassword");
 
-document.getElementById('goldPrice').innerHTML='$'+random;
+if(email == savedEmail && password == savedPassword){
+
+    document.getElementById("loginPage")
+    .classList.add("hidden");
+
+    document.getElementById("appPage")
+    .classList.remove("hidden");
+
+    loadDashboard();
+
+}else{
+
+    alert("Login gagal");
 
 }
 
-setInterval(updateGold,3000);
+}
 
-/* SAVE TRADE */
+/* =========================
+   SAVE TRADE
+========================= */
 
 function saveTrade(){
 
-let pair=document.getElementById('pair').value;
-let profit=Number(document.getElementById('profit').value);
-let result=document.getElementById('result').value;
+let pair = document.getElementById("pair").value;
+let entry = document.getElementById("entry").value;
+let sl = document.getElementById("sl").value;
+let tp = document.getElementById("tp").value;
+let result = document.getElementById("result").value;
+let profit = document.getElementById("profit").value;
 
-let trades=JSON.parse(localStorage.getItem('trades'))||[];
+if(pair == "" || entry == ""){
+    alert("Isi data terlebih dahulu");
+    return;
+}
 
-trades.push({pair,profit,result});
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
 
-localStorage.setItem('trades',JSON.stringify(trades));
+let imageInput = document.getElementById("image");
 
-alert('Trade Saved');
+let imageUrl = "";
+
+if(imageInput.files[0]){
+
+    imageUrl = URL.createObjectURL(imageInput.files[0]);
+
+}
+
+trades.push({
+
+    pair,
+    entry,
+    sl,
+    tp,
+    result,
+    profit:Number(profit),
+    image:imageUrl
+
+});
+
+localStorage.setItem("trades",JSON.stringify(trades));
+
+alert("Trade Saved");
 
 loadDashboard();
 
 }
 
-/* DASHBOARD */
+/* =========================
+   LOAD DASHBOARD
+========================= */
 
 function loadDashboard(){
 
-let trades=JSON.parse(localStorage.getItem('trades'))||[];
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
 
-let balance=1000;
-let win=0;
-let loss=0;
-let equity=[];
+let total = trades.length;
+
+let win = 0;
+let loss = 0;
+
+let balance = 1000;
+
+let balanceData = [];
+
+let historyHTML = "";
 
 trades.forEach(t=>{
 
-balance+=Number(t.profit);
+    balance += Number(t.profit);
 
-equity.push(balance);
+    balanceData.push(balance);
 
-if(t.result=='Win'){
-win++;
-}else{
-loss++;
-}
+    if(t.result == "Win"){
+        win++;
+    }else{
+        loss++;
+    }
+
+    historyHTML += `
+
+    <div class="tradeItem">
+
+    <b>${t.pair}</b><br>
+
+    Entry : ${t.entry}<br>
+    SL : ${t.sl}<br>
+    TP : ${t.tp}<br>
+
+    Result :
+    <span class="${t.result=='Win'?'win':'loss'}">
+    ${t.result}
+    </span><br>
+
+    Profit : $${t.profit}
+
+    ${t.image ? `<img src="${t.image}">` : ""}
+
+    </div>
+
+    `;
 
 });
 
-let total=trades.length;
+let winrate = 0;
 
-let winrate=0;
-
-if(total>0){
-winrate=((win/total)*100).toFixed(1);
+if(total > 0){
+    winrate = ((win/total)*100).toFixed(1);
 }
 
-document.getElementById('balance').innerHTML='Balance : $'+balance;
+document.getElementById("balance")
+.innerHTML = "Balance : $" + balance;
 
-document.getElementById('winrate').innerHTML='Winrate : '+winrate+'%';
+document.getElementById("winrate")
+.innerHTML = "Winrate : " + winrate + "%";
 
-document.getElementById('total').innerHTML='Total Trade : '+total;
+document.getElementById("total")
+.innerHTML = "Total Trade : " + total;
 
-loadChart(equity);
+document.getElementById("tradeHistory")
+.innerHTML = historyHTML;
+
+loadCharts(balanceData,win,loss);
 
 }
 
-/* CHART */
+/* =========================
+   CHART
+========================= */
 
-let equityChart;
+function loadCharts(balanceData,win,loss){
 
-function loadChart(equity){
-
-const ctx=document.getElementById('equityChart');
+const ctx1 = document.getElementById("equityChart");
 
 if(equityChart){
-equityChart.destroy();
+    equityChart.destroy();
 }
 
-equityChart=new Chart(ctx,{
+equityChart = new Chart(ctx1,{
 
-type:'line',
+    type:'line',
 
-data:{
-labels:equity.map((x,i)=>'T'+(i+1)),
-datasets:[{
-label:'Equity',
-data:equity,
-tension:0.4
-}]
+    data:{
+        labels:balanceData.map((x,i)=>"T"+(i+1)),
+        datasets:[{
+            label:'Equity',
+            data:balanceData,
+            tension:0.4
+        }]
+    }
+
+});
+
+const ctx2 = document.getElementById("pieChart");
+
+if(pieChart){
+    pieChart.destroy();
 }
+
+pieChart = new Chart(ctx2,{
+
+    type:'pie',
+
+    data:{
+        labels:['Win','Loss'],
+        datasets:[{
+            data:[win,loss]
+        }]
+    }
 
 });
 
 }
 
-/* AI ANALYSIS */
+/* =========================
+   AI ANALYSIS
+========================= */
 
 function runAI(){
 
-let trades=JSON.parse(localStorage.getItem('trades'))||[];
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
 
-let win=0;
+let total = trades.length;
+
+let win = 0;
 
 trades.forEach(t=>{
-if(t.result=='Win'){
-win++;
-}
+
+    if(t.result == "Win"){
+        win++;
+    }
+
 });
 
-let total=trades.length;
+let winrate = 0;
 
-let winrate=0;
-
-if(total>0){
-winrate=(win/total)*100;
+if(total > 0){
+    winrate = (win/total)*100;
 }
 
-let text='';
+let result = "";
 
-if(winrate>=70){
-text='Excellent performance. Continue high probability setup.';
-}else if(winrate>=50){
-text='Trading stable. Improve risk management.';
+if(winrate >= 70){
+
+result =
+"Excellent performance.<br><br>Your trading psychology is stable and risk management is healthy. Continue focusing on high probability setup and avoid overtrading.";
+
+}else if(winrate >= 50){
+
+result =
+"Trading performance is stable.<br><br>Improve discipline and maintain proper risk management.";
+
 }else{
-text='Reduce overtrading and improve discipline.';
-}
 
-document.getElementById('aiResult').innerHTML=text;
-
-}
-
-/* AI CHAT */
-
-function sendChat(){
-
-let input=document.getElementById('chatInput').value;
-
-let chatBox=document.getElementById('chatBox');
-
-chatBox.innerHTML+=`<div class="chatMsg"><b>You:</b><br>${input}</div>`;
-
-let reply='';
-
-if(input.toLowerCase().includes('buy')){
-reply='AI Analysis: Wait confirmation before BUY entry.';
-}else if(input.toLowerCase().includes('sell')){
-reply='AI Analysis: SELL trend detected carefully.';
-}else{
-reply='AI Assistant ready to help your trading psychology and setup.';
-}
-
-chatBox.innerHTML+=`<div class="chatMsg"><b>AI:</b><br>${reply}</div>`;
-
-chatBox.scrollTop=chatBox.scrollHeight;
+result =
+"Trading performance still weak.<br><br>Reduce overtrading and improve setup quality.";
 
 }
+
+document.getElementById("aiBox").innerHTML = result;
+
+}
+
+/* =========================
+   PDF REPORT
+========================= */
+
+async function downloadPDF(){
+
+const { jsPDF } = window.jspdf;
+
+let pdf = new jsPDF();
+
+pdf.text("FC Trader Pro AI",20,20);
+
+let trades = JSON.parse(localStorage.getItem("trades")) || [];
+
+let y = 40;
+
+trades.forEach((t,i)=>{
+
+pdf.text(
+
+`${i+1}. ${t.pair} | ${t.result} | Profit: $${t.profit}`,
+
+20,
+
+y
+
+);
+
+y += 10;
+
+});
+
+pdf.save("FC-Trader-Report.pdf");
+
+}
+
+/* =========================
+   AUTO LOGIN
+========================= */
+
+window.onload = function(){
+
+if(localStorage.getItem("userEmail")){
+
+document.getElementById("loginPage")
+.classList.add("hidden");
+
+document.getElementById("appPage")
+.classList.remove("hidden");
 
 loadDashboard();
+
+}
+
+}
 
 </script>
 
