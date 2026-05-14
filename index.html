@@ -9,9 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --input: #334155;
+            --bg: #020617;
+            --card: #0f172a;
+            --input: #1e293b;
             --text: #f8fafc;
             --accent: #3b82f6;
             --green: #10b981;
@@ -20,15 +20,15 @@
         }
 
         .light {
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
             --card: #ffffff;
             --input: #f1f5f9;
-            --text: #1e293b;
+            --text: #0f172a;
             --border: #e2e8f0;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: var(--bg); color: var(--text); transition: 0.3s; line-height: 1.6; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); transition: 0.3s; overflow-x: hidden; }
 
         /* Navigation */
         .navbar {
@@ -41,25 +41,25 @@
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
         }
 
-        .brand { font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
 
         /* Layout */
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
-
-        .card { background: var(--card); border-radius: 1.5rem; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
+        .card { background: var(--card); border-radius: 1.2rem; padding: 1.5rem; border: 1px solid var(--border); transition: 0.3s; }
+        .card:hover { border-color: var(--accent); }
 
         /* Forms */
         input, select, textarea {
-            width: 100%; padding: 0.8rem; margin: 0.5rem 0 1rem; border-radius: 0.8rem;
+            width: 100%; padding: 0.75rem; margin: 0.5rem 0 1rem; border-radius: 0.6rem;
             background: var(--input); color: var(--text); border: 1px solid var(--border); outline: none;
         }
 
         button {
-            padding: 0.8rem 1.5rem; border-radius: 0.8rem; border: none; font-weight: 600;
-            cursor: pointer; transition: 0.2s; width: 100%; margin-top: 0.5rem;
+            padding: 0.75rem 1.2rem; border-radius: 0.6rem; border: none; font-weight: 600;
+            cursor: pointer; transition: 0.2s; width: 100%;
         }
 
         .btn-primary { background: var(--accent); color: white; }
@@ -67,159 +67,153 @@
         .btn-danger { background: var(--red); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        /* Dashboard Items */
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
-        .stat-item { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 1rem; text-align: center; }
-        .stat-val { font-size: 1.2rem; font-weight: bold; display: block; color: var(--accent); }
+        /* Dashboard Stats */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem; }
+        .stat-item { background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.8rem; border: 1px solid var(--border); }
+        .stat-label { font-size: 0.8rem; opacity: 0.7; display: block; }
+        .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
 
         /* History */
-        .trade-card { background: rgba(255,255,255,0.03); border-radius: 1rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); }
+        .trade-card { background: rgba(255,255,255,0.02); border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); position: relative; }
         .win-border { border-left-color: var(--green); }
         .loss-border { border-left-color: var(--red); }
 
-        /* Admin & Community */
-        .social-box { display: flex; flex-direction: column; gap: 0.8rem; }
-        .social-link { text-decoration: none; padding: 0.8rem; border-radius: 0.8rem; text-align: center; font-weight: bold; color: white; }
+        /* Broker Section */
+        .broker-box { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+        .broker-link { 
+            text-decoration: none; padding: 0.8rem; border-radius: 0.6rem; text-align: center; 
+            font-weight: 700; color: white; font-size: 0.9rem; transition: 0.2s;
+        }
+        .broker-link:hover { filter: brightness(1.1); transform: scale(1.02); }
 
         .hidden { display: none; }
-        .footer { text-align: center; padding: 3rem; opacity: 0.5; font-size: 0.9rem; }
-
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+        .footer { text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="brand">FC TRADER PRO</div>
+        <div class="brand">FC TRADER PRO <span style="font-size: 0.7rem; vertical-align: top;">PREMIUM</span></div>
         <div style="display: flex; gap: 8px;">
-            <button onclick="toggleTheme()" class="btn-outline" style="width: auto; padding: 0.5rem 0.8rem;">🌓</button>
-            <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto; padding: 0.5rem 0.8rem;">Keluar</button>
+            <button onclick="toggleTheme()" class="btn-outline" style="width: auto;">🌓</button>
+            <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto;">Exit</button>
         </div>
     </nav>
 
-    <!-- Halaman Login -->
+    <!-- Halaman Login/Signup -->
     <div id="loginPage" class="container">
-        <div class="card" style="grid-column: 1 / -1; max-width: 450px; margin: auto;">
-            <h2 style="text-align: center; margin-bottom: 1.5rem;">Selamat Datang</h2>
-            <label>Email</label>
-            <input type="email" id="email" placeholder="nama@gmail.com">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="••••••••">
-            <button onclick="login()" class="btn-primary">Masuk ke Dashboard</button>
-            <button onclick="signup()" class="btn-outline">Daftar Akun Baru</button>
-            <p style="font-size: 0.8rem; margin-top: 1rem; text-align: center; opacity: 0.7;">
-                Catatan: Data disimpan secara lokal di browser ini.
-            </p>
+        <div class="card" style="grid-column: 1 / -1; max-width: 400px; margin: 4rem auto;">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">Access Portal</h2>
+            <input type="email" id="email" placeholder="Email Address">
+            <input type="password" id="password" placeholder="Secure Password">
+            <button onclick="login()" class="btn-primary">Login</button>
+            <button onclick="signup()" class="btn-outline" style="margin-top: 0.8rem;">Create Local Account</button>
         </div>
     </div>
 
-    <!-- Halaman Utama App -->
+    <!-- Dashboard Utama -->
     <div id="appPage" class="hidden">
         <div class="container">
-            <!-- Sidebar Stats -->
+            
+            <!-- Summary Stats -->
             <div class="card">
-                <h3>📊 Dashboard</h3>
+                <h3>📊 Performance</h3>
                 <div class="stat-grid">
-                    <div class="stat-item"><span>Balance</span><span class="stat-val" id="val-balance">$0</span></div>
-                    <div class="stat-item"><span>Winrate</span><span class="stat-val" id="val-wr">0%</span></div>
-                    <div class="stat-item"><span>Monthly</span><span class="stat-val" id="val-monthly">$0</span></div>
-                    <div class="stat-item"><span>Total Trade</span><span class="stat-val" id="val-total">0</span></div>
+                    <div class="stat-item"><span class="stat-label">Equity</span><span class="stat-val" id="val-balance">$0</span></div>
+                    <div class="stat-item"><span class="stat-label">Winrate</span><span class="stat-val" id="val-wr">0%</span></div>
+                    <div class="stat-item"><span class="stat-label">Total Profit</span><span class="stat-val" id="val-profit">$0</span></div>
+                    <div class="stat-item"><span class="stat-label">Trades</span><span class="stat-val" id="val-total">0</span></div>
                 </div>
-                <hr style="margin: 1.5rem 0; opacity: 0.1;">
-                <label>Update Modal Awal ($)</label>
-                <input type="number" id="startBalance" placeholder="Contoh: 1000">
+                <hr style="margin: 1.2rem 0; opacity: 0.1;">
+                <label>Set Initial Capital ($)</label>
+                <input type="number" id="startBalance" placeholder="e.g. 500">
                 <button onclick="saveBalance()" class="btn-primary">Update Modal</button>
             </div>
 
-            <!-- Input Trade -->
+            <!-- Trade Journaling -->
             <div class="card">
-                <h3>📝 Log Trade Baru</h3>
+                <h3>📝 Journal Entry</h3>
                 <input type="hidden" id="editIndex">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <input type="date" id="date">
-                    <input type="text" id="pair" placeholder="Pair (XAUUSD)">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-                    <input type="number" id="entry" placeholder="Entry">
-                    <input type="number" id="sl" placeholder="SL">
-                    <input type="number" id="tp" placeholder="TP">
+                    <input type="text" id="pair" placeholder="Asset (XAUUSD)">
                 </div>
                 <select id="result">
                     <option value="Win">✅ Profit (Win)</option>
-                    <option value="Loss">❌ Rugi (Loss)</option>
+                    <option value="Loss">❌ Loss</option>
                 </select>
-                <input type="number" id="profit" placeholder="Nominal Profit/Loss ($)">
-                <textarea id="note" placeholder="Alasan entry atau evaluasi..."></textarea>
-                <button onclick="saveTrade()" class="btn-success">Simpan Trading</button>
+                <input type="number" id="profit" placeholder="P/L Amount ($)">
+                <textarea id="note" placeholder="Trade rationale..."></textarea>
+                <button onclick="saveTrade()" class="btn-success">Save Entry</button>
             </div>
 
-            <!-- Chart -->
+            <!-- Charts -->
             <div class="card">
-                <h3>📈 Perkembangan Equity</h3>
+                <h3>📈 Growth Curve</h3>
                 <canvas id="equityChart" style="margin-top: 1rem;"></canvas>
             </div>
 
-            <!-- Komunitas & Admin -->
+            <!-- Official Links & Community -->
             <div class="card">
-                <h3>🚀 Komunitas & Admin</h3>
-                <div class="social-box" style="margin-top: 1rem;">
-                    <a href="https://t.me/faiztradingfc" target="_blank" class="social-link" style="background: #0088cc;">📱 Join Telegram Signal</a>
-                    <a href="https://wa.me/6285268322688" target="_blank" class="social-link" style="background: #25d366;">💬 Chat Admin (Faiz)</a>
-                    <a href="https://ma.valetax.com/p/7322040" target="_blank" class="social-link" style="background: #f59e0b;">🏦 Broker Rekomendasi</a>
+                <h3>🔗 Official Links</h3>
+                <div class="broker-box">
+                    <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background: #b45309;">🏆 Best Broker for XAU</a>
+                    <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background: #1d4ed8;">₿ Best Broker for Crypto</a>
+                    <a href="https://t.me/faiztradingfc" target="_blank" class="broker-link" style="background: #0ea5e9;">✈️ Telegram Community</a>
+                    <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">👾 Official Discord</a>
+                    <a href="https://wa.me/6285268322688" target="_blank" class="broker-link" style="background: #22c55e;">💬 Admin Support (WA)</a>
                 </div>
-                <div style="margin-top: 1.5rem;">
-                    <button onclick="exportData()" class="btn-outline">📥 Backup Data (JSON)</button>
-                    <button onclick="resetAll()" class="btn-danger">🗑️ Reset Semua Data</button>
+                <div style="margin-top: 1rem; display: flex; gap: 5px;">
+                    <button onclick="exportData()" class="btn-outline" style="font-size: 0.7rem;">Backup JSON</button>
+                    <button onclick="resetAll()" class="btn-danger" style="font-size: 0.7rem;">Reset Data</button>
                 </div>
             </div>
 
-            <!-- History -->
+            <!-- History List -->
             <div class="card" style="grid-column: 1 / -1;">
-                <h3>📜 Riwayat Trading</h3>
-                <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
-                    <!-- Data masuk disini -->
+                <h3>📜 Trade History</h3>
+                <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <!-- Data entries -->
                 </div>
             </div>
+
         </div>
-        <div class="footer">FC Trader Pro AI PREMIUM © 2026</div>
+        <div class="footer">FC TRADER PRO AI • Powered by Faiz Trading FC</div>
     </div>
 
     <script>
         let currentUser = "";
         let equityChart;
 
-        // AUTH FUNCTIONS
+        // AUTH SYSTEM
         function signup() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Lengkapi data!");
+            if(!email || !pass) return alert("Please fill all fields!");
 
             let users = JSON.parse(localStorage.getItem('fc_users')) || [];
-            if(users.find(u => u.email === email)) return alert("Email sudah terdaftar!");
+            if(users.some(u => u.email === email)) return alert("Email already exists!");
 
             users.push({email, pass});
             localStorage.setItem('fc_users', JSON.stringify(users));
-            alert("Pendaftaran Berhasil! Silakan Login.");
+            alert("Account created locally!");
         }
 
         function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            let users = JSON.parse(localStorage.getItem('fc_users')) || [];
+            const users = JSON.parse(localStorage.getItem('fc_users')) || [];
             
-            const user = users.find(u => u.email === email && u.pass === pass);
-            if(user) {
+            if(users.some(u => u.email === email && u.pass === pass)) {
                 currentUser = email;
                 localStorage.setItem('fc_session', email);
-                showApp();
+                initApp();
             } else {
-                alert("Email atau Password salah!");
+                alert("Invalid credentials!");
             }
         }
 
-        function showApp() {
+        function initApp() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('appPage').classList.remove('hidden');
             document.getElementById('logoutBtn').classList.remove('hidden');
@@ -231,17 +225,17 @@
             location.reload();
         }
 
-        // DATA FUNCTIONS
+        // CORE LOGIC
         function saveBalance() {
             const val = document.getElementById('startBalance').value;
-            localStorage.setItem(`balance_${currentUser}`, val);
+            localStorage.setItem(`bal_${currentUser}`, val);
             loadDashboard();
         }
 
         function saveTrade() {
             const trade = {
-                date: document.getElementById('date').value,
-                pair: document.getElementById('pair').value,
+                date: document.getElementById('date').value || new Date().toISOString().split('T')[0],
+                pair: document.getElementById('pair').value || 'Unknown',
                 result: document.getElementById('result').value,
                 profit: parseFloat(document.getElementById('profit').value) || 0,
                 note: document.getElementById('note').value
@@ -254,45 +248,38 @@
             else trades[editIndex] = trade;
 
             localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
-            clearForm();
+            resetForm();
             loadDashboard();
         }
 
         function loadDashboard() {
             const trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
-            const startBal = parseFloat(localStorage.getItem(`balance_${currentUser}`)) || 0;
+            const startBal = parseFloat(localStorage.getItem(`bal_${currentUser}`)) || 0;
             
-            let currentBal = startBal;
+            let totalProfit = 0;
             let wins = 0;
-            let monthlyProfit = 0;
             let balancePoints = [startBal];
-
+            let currentBal = startBal;
             let historyHTML = "";
-            const now = new Date();
 
             trades.forEach((t, i) => {
+                totalProfit += t.profit;
                 currentBal += t.profit;
                 balancePoints.push(currentBal);
                 if(t.result === "Win") wins++;
 
-                // Hitung profit bulan ini
-                const tDate = new Date(t.date);
-                if(tDate.getMonth() === now.getMonth()) monthlyProfit += t.profit;
-
                 historyHTML += `
                     <div class="trade-card ${t.result === 'Win' ? 'win-border' : 'loss-border'}">
-                        <div style="display:flex; justify-content:space-between">
-                            <strong>${t.pair}</strong>
-                            <small>${t.date}</small>
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.4rem">
+                            <strong>${t.pair}</strong> <span>${t.date}</span>
                         </div>
-                        <div style="font-size: 0.9rem; margin: 0.5rem 0;">
-                            Hasil: <span style="color:${t.result==='Win'?'#10b981':'#ef4444'}">${t.result}</span> | 
-                            Profit: $${t.profit}
+                        <div style="font-weight:bold; color:${t.result === 'Win' ? '#10b981' : '#ef4444'}">
+                            ${t.result} ($${t.profit})
                         </div>
-                        <p style="font-size: 0.8rem; opacity: 0.7;">${t.note}</p>
-                        <div style="display:flex; gap:5px; margin-top:0.8rem">
-                            <button onclick="editTrade(${i})" class="btn-outline" style="padding:4px; font-size:0.7rem">Edit</button>
-                            <button onclick="deleteTrade(${i})" class="btn-danger" style="padding:4px; font-size:0.7rem">Hapus</button>
+                        <p style="font-size:0.75rem; opacity:0.6; margin:0.4rem 0;">${t.note}</p>
+                        <div style="display:flex; gap:8px;">
+                            <button onclick="editTrade(${i})" class="btn-outline" style="padding:4px; font-size:0.6rem; width:auto;">Edit</button>
+                            <button onclick="deleteTrade(${i})" class="btn-danger" style="padding:4px; font-size:0.6rem; width:auto;">Delete</button>
                         </div>
                     </div>
                 `;
@@ -300,45 +287,43 @@
 
             document.getElementById('val-balance').innerText = `$${currentBal.toFixed(2)}`;
             document.getElementById('val-wr').innerText = trades.length ? ((wins/trades.length)*100).toFixed(1) + '%' : '0%';
-            document.getElementById('val-monthly').innerText = `$${monthlyProfit.toFixed(2)}`;
+            document.getElementById('val-profit').innerText = `$${totalProfit.toFixed(2)}`;
             document.getElementById('val-total').innerText = trades.length;
             document.getElementById('tradeHistory').innerHTML = historyHTML;
 
-            updateChart(balancePoints);
+            drawChart(balancePoints);
         }
 
-        function updateChart(dataPoints) {
+        function drawChart(data) {
             const ctx = document.getElementById('equityChart').getContext('2d');
             if(equityChart) equityChart.destroy();
             equityChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: dataPoints.map((_, i) => i === 0 ? "Start" : "T" + i),
+                    labels: data.map((_, i) => i),
                     datasets: [{
-                        label: 'Equity ($)',
-                        data: dataPoints,
+                        data: data,
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.3
+                        fill: true, tension: 0.3, pointRadius: 0
                     }]
                 },
-                options: { responsive: true, plugins: { legend: { display: false } } }
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { display: false } } }
             });
         }
 
         function exportData() {
-            const trades = localStorage.getItem(`trades_${currentUser}`);
-            const blob = new Blob([trades], {type: "application/json"});
+            const data = localStorage.getItem(`trades_${currentUser}`);
+            const blob = new Blob([data], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `backup_fc_trader_${currentUser}.json`;
+            a.download = `backup_${currentUser}.json`;
             a.click();
         }
 
         function resetAll() {
-            if(confirm("Hapus semua riwayat trading? Tindakan ini tidak bisa dibatalkan.")) {
+            if(confirm("Wipe all trading data for this user?")) {
                 localStorage.removeItem(`trades_${currentUser}`);
                 loadDashboard();
             }
@@ -346,10 +331,9 @@
 
         function toggleTheme() {
             document.body.classList.toggle('light');
-            localStorage.setItem('fc_theme', document.body.classList.contains('light') ? 'light' : 'dark');
         }
 
-        function clearForm() {
+        function resetForm() {
             document.getElementById('editIndex').value = "";
             document.getElementById('pair').value = "";
             document.getElementById('profit').value = "";
@@ -375,13 +359,11 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // Auto Login
         window.onload = () => {
-            if(localStorage.getItem('fc_theme') === 'light') document.body.classList.add('light');
             const session = localStorage.getItem('fc_session');
             if(session) {
                 currentUser = session;
-                showApp();
+                initApp();
             }
         };
     </script>
