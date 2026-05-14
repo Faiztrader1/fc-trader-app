@@ -6,211 +6,140 @@
     <title>FC Trader Pro AI PREMIUM</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --bg: #020617;
-            --card: #0f172a;
-            --input: #1e293b;
-            --text: #f8fafc;
-            --accent: #3b82f6;
-            --green: #10b981;
-            --red: #ef4444;
-            --border: rgba(255,255,255,0.1);
+            --bg: #020617; --card: #0f172a; --input: #1e293b; --text: #f8fafc;
+            --accent: #3b82f6; --green: #10b981; --red: #ef4444; --border: rgba(255,255,255,0.1);
         }
-
-        .light {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --input: #f1f5f9;
-            --text: #0f172a;
-            --border: #e2e8f0;
-        }
-
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); transition: 0.3s; overflow-x: hidden; }
-
-        /* Navigation */
-        .navbar {
-            background: var(--card);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-        }
-
-        .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
-
-        /* Layout */
+        body { background: var(--bg); color: var(--text); transition: 0.3s; }
+        .navbar { background: var(--card); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
         .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
-        .card { background: var(--card); border-radius: 1.2rem; padding: 1.5rem; border: 1px solid var(--border); transition: 0.3s; }
-        .card:hover { border-color: var(--accent); }
-
-        /* Forms */
-        input, select, textarea {
-            width: 100%; padding: 0.75rem; margin: 0.5rem 0 1rem; border-radius: 0.6rem;
-            background: var(--input); color: var(--text); border: 1px solid var(--border); outline: none;
-        }
-
-        button {
-            padding: 0.75rem 1.2rem; border-radius: 0.6rem; border: none; font-weight: 600;
-            cursor: pointer; transition: 0.2s; width: 100%;
-        }
-
+        .card { background: var(--card); border-radius: 1.2rem; padding: 1.5rem; border: 1px solid var(--border); }
+        input, select, textarea { width: 100%; padding: 0.75rem; margin: 0.5rem 0 1rem; border-radius: 0.6rem; background: var(--input); color: var(--text); border: 1px solid var(--border); outline: none; font-size: 0.9rem; }
+        button { padding: 0.75rem; border-radius: 0.6rem; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 0.5rem; }
         .btn-primary { background: var(--accent); color: white; }
         .btn-success { background: var(--green); color: white; }
         .btn-danger { background: var(--red); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
-
-        /* Dashboard Stats */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem; }
-        .stat-item { background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.8rem; border: 1px solid var(--border); }
-        .stat-label { font-size: 0.8rem; opacity: 0.7; display: block; }
-        .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
-
-        /* History */
-        .trade-card { background: rgba(255,255,255,0.02); border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); position: relative; }
+        .stat-item { background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.8rem; border: 1px solid var(--border); text-align: center; }
+        .stat-val { font-size: 1.1rem; font-weight: 700; color: var(--accent); display: block; }
+        .trade-card { background: rgba(255,255,255,0.02); border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); font-size: 0.85rem; }
         .win-border { border-left-color: var(--green); }
         .loss-border { border-left-color: var(--red); }
-
-        /* Broker Section */
         .broker-box { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
-        .broker-link { 
-            text-decoration: none; padding: 0.8rem; border-radius: 0.6rem; text-align: center; 
-            font-weight: 700; color: white; font-size: 0.9rem; transition: 0.2s;
-        }
-        .broker-link:hover { filter: brightness(1.1); transform: scale(1.02); }
-
+        .broker-link { text-decoration: none; padding: 0.7rem; border-radius: 0.6rem; text-align: center; font-weight: 700; color: white; font-size: 0.8rem; }
         .hidden { display: none; }
-        .footer { text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="brand">FC TRADER PRO <span style="font-size: 0.7rem; vertical-align: top;">PREMIUM</span></div>
-        <div style="display: flex; gap: 8px;">
-            <button onclick="toggleTheme()" class="btn-outline" style="width: auto;">🌓</button>
-            <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto;">Exit</button>
-        </div>
+        <div style="font-weight: 800; color: var(--accent);">FC TRADER PRO</div>
+        <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto; padding: 0.4rem 0.8rem;">Exit</button>
     </nav>
 
-    <!-- Halaman Login/Signup -->
+    <!-- Login -->
     <div id="loginPage" class="container">
         <div class="card" style="grid-column: 1 / -1; max-width: 400px; margin: 4rem auto;">
-            <h2 style="text-align: center; margin-bottom: 1.5rem;">Access Portal</h2>
-            <input type="email" id="email" placeholder="Email Address">
-            <input type="password" id="password" placeholder="Secure Password">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">Trading Portal</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
             <button onclick="login()" class="btn-primary">Login</button>
-            <button onclick="signup()" class="btn-outline" style="margin-top: 0.8rem;">Create Local Account</button>
+            <button onclick="signup()" style="background:transparent; color:var(--accent); border:1px solid var(--accent); margin-top:10px;">Sign Up Lokal</button>
         </div>
     </div>
 
-    <!-- Dashboard Utama -->
+    <!-- App -->
     <div id="appPage" class="hidden">
         <div class="container">
             
-            <!-- Summary Stats -->
             <div class="card">
-                <h3>📊 Performance</h3>
+                <h3>💰 Modal & Currency</h3>
+                <select id="currency" onchange="loadDashboard()">
+                    <option value="USD">Currency: USD ($)</option>
+                    <option value="IDR">Currency: IDR (Rp)</option>
+                </select>
+                <input type="number" id="startBalance" placeholder="Input Modal Awal">
+                <button onclick="saveBalance()" class="btn-primary">Set Modal</button>
                 <div class="stat-grid">
-                    <div class="stat-item"><span class="stat-label">Equity</span><span class="stat-val" id="val-balance">$0</span></div>
-                    <div class="stat-item"><span class="stat-label">Winrate</span><span class="stat-val" id="val-wr">0%</span></div>
-                    <div class="stat-item"><span class="stat-label">Total Profit</span><span class="stat-val" id="val-profit">$0</span></div>
-                    <div class="stat-item"><span class="stat-label">Trades</span><span class="stat-val" id="val-total">0</span></div>
+                    <div class="stat-item"><span>Equity</span><span class="stat-val" id="val-balance">0</span></div>
+                    <div class="stat-item"><span>Winrate</span><span class="stat-val" id="val-wr">0%</span></div>
                 </div>
-                <hr style="margin: 1.2rem 0; opacity: 0.1;">
-                <label>Set Initial Capital ($)</label>
-                <input type="number" id="startBalance" placeholder="e.g. 500">
-                <button onclick="saveBalance()" class="btn-primary">Update Modal</button>
             </div>
 
-            <!-- Trade Journaling -->
             <div class="card">
-                <h3>📝 Journal Entry</h3>
+                <h3>📝 Trading Journal</h3>
                 <input type="hidden" id="editIndex">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <input type="date" id="date">
-                    <input type="text" id="pair" placeholder="Asset (XAUUSD)">
+                    <input type="datetime-local" id="datetime">
+                    <select id="asset">
+                        <option value="XAUUSD">XAUUSD (Gold)</option>
+                        <option value="Crypto">Crypto Asset</option>
+                    </select>
                 </div>
-                <select id="result">
-                    <option value="Win">✅ Profit (Win)</option>
-                    <option value="Loss">❌ Loss</option>
-                </select>
-                <input type="number" id="profit" placeholder="P/L Amount ($)">
-                <textarea id="note" placeholder="Trade rationale..."></textarea>
-                <button onclick="saveTrade()" class="btn-success">Save Entry</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                    <input type="number" id="entry" placeholder="Entry">
+                    <input type="number" id="sl" placeholder="SL">
+                    <input type="number" id="tp" placeholder="TP">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <select id="result">
+                        <option value="Win">Win ✅</option>
+                        <option value="Loss">Loss ❌</option>
+                    </select>
+                    <input type="number" id="profit" placeholder="P/L (+/-)">
+                </div>
+                <button onclick="saveTrade()" class="btn-success">Simpan Trade</button>
             </div>
 
-            <!-- Charts -->
             <div class="card">
-                <h3>📈 Growth Curve</h3>
-                <canvas id="equityChart" style="margin-top: 1rem;"></canvas>
+                <h3>📈 Performance Chart</h3>
+                <canvas id="equityChart"></canvas>
             </div>
 
-            <!-- Official Links & Community -->
             <div class="card">
                 <h3>🔗 Official Links</h3>
                 <div class="broker-box">
-                    <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background: #b45309;">🏆 Best Broker for XAU</a>
-                    <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background: #1d4ed8;">₿ Best Broker for Crypto</a>
-                    <a href="https://t.me/faiztradingfc" target="_blank" class="broker-link" style="background: #0ea5e9;">✈️ Telegram Community</a>
-                    <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">👾 Official Discord</a>
-                    <a href="https://wa.me/6285268322688" target="_blank" class="broker-link" style="background: #22c55e;">💬 Admin Support (WA)</a>
+                    <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background: #b45309;">Gold Broker (XAU)</a>
+                    <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background: #1d4ed8;">Crypto Broker</a>
+                    <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">Discord Community</a>
                 </div>
-                <div style="margin-top: 1rem; display: flex; gap: 5px;">
-                    <button onclick="exportData()" class="btn-outline" style="font-size: 0.7rem;">Backup JSON</button>
-                    <button onclick="resetAll()" class="btn-danger" style="font-size: 0.7rem;">Reset Data</button>
-                </div>
+                <button onclick="exportData()" style="background:rgba(255,255,255,0.1); font-size: 10px; margin-top: 15px;">BACKUP DATA (JSON)</button>
             </div>
 
-            <!-- History List -->
             <div class="card" style="grid-column: 1 / -1;">
-                <h3>📜 Trade History</h3>
-                <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                    <!-- Data entries -->
-                </div>
+                <h3>📜 History Trading</h3>
+                <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;"></div>
             </div>
 
         </div>
-        <div class="footer">FC TRADER PRO AI • Powered by Faiz Trading FC</div>
     </div>
 
     <script>
         let currentUser = "";
         let equityChart;
 
-        // AUTH SYSTEM
         function signup() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Please fill all fields!");
-
+            if(!email || !pass) return alert("Isi semua data!");
             let users = JSON.parse(localStorage.getItem('fc_users')) || [];
-            if(users.some(u => u.email === email)) return alert("Email already exists!");
-
+            if(users.some(u => u.email === email)) return alert("User sudah ada!");
             users.push({email, pass});
             localStorage.setItem('fc_users', JSON.stringify(users));
-            alert("Account created locally!");
+            alert("Berhasil Daftar!");
         }
 
         function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             const users = JSON.parse(localStorage.getItem('fc_users')) || [];
-            
             if(users.some(u => u.email === email && u.pass === pass)) {
                 currentUser = email;
                 localStorage.setItem('fc_session', email);
                 initApp();
-            } else {
-                alert("Invalid credentials!");
-            }
+            } else { alert("Login Salah!"); }
         }
 
         function initApp() {
@@ -220,78 +149,56 @@
             loadDashboard();
         }
 
-        function logout() {
-            localStorage.removeItem('fc_session');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('fc_session'); location.reload(); }
 
-        // CORE LOGIC
         function saveBalance() {
-            const val = document.getElementById('startBalance').value;
-            localStorage.setItem(`bal_${currentUser}`, val);
+            localStorage.setItem(`bal_${currentUser}`, document.getElementById('startBalance').value);
             loadDashboard();
         }
 
         function saveTrade() {
             const trade = {
-                date: document.getElementById('date').value || new Date().toISOString().split('T')[0],
-                pair: document.getElementById('pair').value || 'Unknown',
-                result: document.getElementById('result').value,
-                profit: parseFloat(document.getElementById('profit').value) || 0,
-                note: document.getElementById('note').value
+                dt: document.getElementById('datetime').value,
+                ast: document.getElementById('asset').value,
+                en: document.getElementById('entry').value,
+                sl: document.getElementById('sl').value,
+                tp: document.getElementById('tp').value,
+                res: document.getElementById('result').value,
+                pl: parseFloat(document.getElementById('profit').value) || 0
             };
-
             let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
-            const editIndex = document.getElementById('editIndex').value;
-
-            if(editIndex === "") trades.push(trade);
-            else trades[editIndex] = trade;
-
+            trades.push(trade);
             localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
-            resetForm();
             loadDashboard();
         }
 
         function loadDashboard() {
             const trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
             const startBal = parseFloat(localStorage.getItem(`bal_${currentUser}`)) || 0;
-            
-            let totalProfit = 0;
-            let wins = 0;
-            let balancePoints = [startBal];
+            const curr = document.getElementById('currency').value;
+            const sym = curr === "USD" ? "$" : "Rp";
+
             let currentBal = startBal;
-            let historyHTML = "";
+            let wins = 0;
+            let pts = [startBal];
+            let html = "";
 
             trades.forEach((t, i) => {
-                totalProfit += t.profit;
-                currentBal += t.profit;
-                balancePoints.push(currentBal);
-                if(t.result === "Win") wins++;
-
-                historyHTML += `
-                    <div class="trade-card ${t.result === 'Win' ? 'win-border' : 'loss-border'}">
-                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.4rem">
-                            <strong>${t.pair}</strong> <span>${t.date}</span>
-                        </div>
-                        <div style="font-weight:bold; color:${t.result === 'Win' ? '#10b981' : '#ef4444'}">
-                            ${t.result} ($${t.profit})
-                        </div>
-                        <p style="font-size:0.75rem; opacity:0.6; margin:0.4rem 0;">${t.note}</p>
-                        <div style="display:flex; gap:8px;">
-                            <button onclick="editTrade(${i})" class="btn-outline" style="padding:4px; font-size:0.6rem; width:auto;">Edit</button>
-                            <button onclick="deleteTrade(${i})" class="btn-danger" style="padding:4px; font-size:0.6rem; width:auto;">Delete</button>
-                        </div>
-                    </div>
-                `;
+                currentBal += t.pl;
+                pts.push(currentBal);
+                if(t.res === "Win") wins++;
+                html += `
+                    <div class="trade-card ${t.res === 'Win' ? 'win-border' : 'loss-border'}">
+                        <strong>${t.ast}</strong> | <small>${t.dt.replace('T', ' ')}</small><br>
+                        E: ${t.en} | SL: ${t.sl} | TP: ${t.tp}<br>
+                        <span style="color:${t.res === 'Win' ? '#10b981' : '#ef4444'}">P/L: ${sym}${t.pl} (${t.res})</span>
+                    </div>`;
             });
 
-            document.getElementById('val-balance').innerText = `$${currentBal.toFixed(2)}`;
+            document.getElementById('val-balance').innerText = sym + currentBal.toLocaleString();
             document.getElementById('val-wr').innerText = trades.length ? ((wins/trades.length)*100).toFixed(1) + '%' : '0%';
-            document.getElementById('val-profit').innerText = `$${totalProfit.toFixed(2)}`;
-            document.getElementById('val-total').innerText = trades.length;
-            document.getElementById('tradeHistory').innerHTML = historyHTML;
-
-            drawChart(balancePoints);
+            document.getElementById('tradeHistory').innerHTML = html;
+            drawChart(pts);
         }
 
         function drawChart(data) {
@@ -301,70 +208,24 @@
                 type: 'line',
                 data: {
                     labels: data.map((_, i) => i),
-                    datasets: [{
-                        data: data,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true, tension: 0.3, pointRadius: 0
-                    }]
+                    datasets: [{ data: data, borderColor: '#3b82f6', fill: false, tension: 0.3 }]
                 },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { display: false } } }
+                options: { plugins: { legend: { display: false } } }
             });
         }
 
         function exportData() {
             const data = localStorage.getItem(`trades_${currentUser}`);
             const blob = new Blob([data], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `backup_${currentUser}.json`;
             a.click();
         }
 
-        function resetAll() {
-            if(confirm("Wipe all trading data for this user?")) {
-                localStorage.removeItem(`trades_${currentUser}`);
-                loadDashboard();
-            }
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light');
-        }
-
-        function resetForm() {
-            document.getElementById('editIndex').value = "";
-            document.getElementById('pair').value = "";
-            document.getElementById('profit').value = "";
-            document.getElementById('note').value = "";
-        }
-
-        function deleteTrade(i) {
-            let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`));
-            trades.splice(i, 1);
-            localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
-            loadDashboard();
-        }
-
-        function editTrade(i) {
-            const trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`));
-            const t = trades[i];
-            document.getElementById('editIndex').value = i;
-            document.getElementById('date').value = t.date;
-            document.getElementById('pair').value = t.pair;
-            document.getElementById('result').value = t.result;
-            document.getElementById('profit').value = t.profit;
-            document.getElementById('note').value = t.note;
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
         window.onload = () => {
             const session = localStorage.getItem('fc_session');
-            if(session) {
-                currentUser = session;
-                initApp();
-            }
+            if(session) { currentUser = session; initApp(); }
         };
     </script>
 </body>
