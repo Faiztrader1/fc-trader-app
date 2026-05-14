@@ -11,124 +11,197 @@
             --bg: #020617; --card: #0f172a; --input: #1e293b; --text: #f8fafc;
             --accent: #3b82f6; --green: #10b981; --red: #ef4444; --border: rgba(255,255,255,0.1);
         }
+        
+        /* Tema Terang (Light Mode) */
+        .light {
+            --bg: #f8fafc; --card: #ffffff; --input: #f1f5f9; --text: #0f172a;
+            --border: #e2e8f0;
+        }
+
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); transition: 0.3s; }
+        
         .navbar { background: var(--card); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        .nav-buttons { display: flex; gap: 8px; }
+        
         .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
-        .card { background: var(--card); border-radius: 1.2rem; padding: 1.5rem; border: 1px solid var(--border); }
+        .card { background: var(--card); border-radius: 1.2rem; padding: 1.5rem; border: 1px solid var(--border); transition: 0.3s; }
+        
         input, select, textarea { width: 100%; padding: 0.75rem; margin: 0.5rem 0 1rem; border-radius: 0.6rem; background: var(--input); color: var(--text); border: 1px solid var(--border); outline: none; font-size: 0.9rem; }
         button { padding: 0.75rem; border-radius: 0.6rem; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 0.5rem; }
+        button:hover { opacity: 0.9; }
+        
         .btn-primary { background: var(--accent); color: white; }
         .btn-success { background: var(--green); color: white; }
         .btn-danger { background: var(--red); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); width: auto; padding: 0.5rem 0.8rem; }
+        .btn-install { background: #f59e0b; color: white; width: auto; padding: 0.5rem 0.8rem; display: none; } /* Muncul jika bisa diinstall */
+        
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem; }
         .stat-item { background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.8rem; border: 1px solid var(--border); text-align: center; }
         .stat-val { font-size: 1.1rem; font-weight: 700; color: var(--accent); display: block; }
-        .trade-card { background: rgba(255,255,255,0.02); border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); font-size: 0.85rem; }
+        
+        .trade-card { background: rgba(255,255,255,0.02); border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); font-size: 0.85rem; position: relative; }
         .win-border { border-left-color: var(--green); }
         .loss-border { border-left-color: var(--red); }
+        .del-btn { background: rgba(239, 68, 68, 0.1); color: var(--red); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--red); cursor: pointer; font-size: 0.7rem; width: auto; margin-top: 10px; }
+        
         .broker-box { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
-        .broker-link { text-decoration: none; padding: 0.7rem; border-radius: 0.6rem; text-align: center; font-weight: 700; color: white; font-size: 0.8rem; }
+        .broker-link { text-decoration: none; padding: 0.7rem; border-radius: 0.6rem; text-align: center; font-weight: 700; color: white; font-size: 0.8rem; transition: 0.2s; }
+        .broker-link:hover { transform: scale(1.02); }
+        
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div style="font-weight: 800; color: var(--accent);">FC TRADER PRO</div>
-        <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto; padding: 0.4rem 0.8rem;">Exit</button>
+        <div style="font-weight: 800; color: var(--accent); font-size: 1.2rem;">FC TRADER <span style="font-size: 0.7rem; color: var(--text);">PRO</span></div>
+        <div class="nav-buttons">
+            <button id="installBtn" class="btn-install" onclick="installPWA()">📥 Install App</button>
+            <button onclick="toggleTheme()" class="btn-outline">🌓</button>
+            <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto; padding: 0.5rem 0.8rem;">Exit</button>
+        </div>
     </nav>
 
-    <!-- Login -->
+    <!-- Login Page -->
     <div id="loginPage" class="container">
         <div class="card" style="grid-column: 1 / -1; max-width: 400px; margin: 4rem auto;">
-            <h2 style="text-align: center; margin-bottom: 1.5rem;">Trading Portal</h2>
-            <input type="email" id="email" placeholder="Email">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">Access Portal</h2>
+            <input type="email" id="email" placeholder="Email Address">
             <input type="password" id="password" placeholder="Password">
-            <button onclick="login()" class="btn-primary">Login</button>
-            <button onclick="signup()" style="background:transparent; color:var(--accent); border:1px solid var(--accent); margin-top:10px;">Sign Up Lokal</button>
+            <button onclick="login()" class="btn-primary">Login ke Dashboard</button>
+            <button onclick="signup()" style="background:transparent; color:var(--accent); border:1px solid var(--accent); margin-top:10px;">Daftar Akun Baru</button>
         </div>
     </div>
 
-    <!-- App -->
+    <!-- Main App -->
     <div id="appPage" class="hidden">
         <div class="container">
             
+            <!-- Modal & Stats -->
             <div class="card">
                 <h3>💰 Modal & Currency</h3>
                 <select id="currency" onchange="loadDashboard()">
-                    <option value="USD">Currency: USD ($)</option>
-                    <option value="IDR">Currency: IDR (Rp)</option>
+                    <option value="USD">Mata Uang: USD ($)</option>
+                    <option value="IDR">Mata Uang: IDR (Rp)</option>
                 </select>
-                <input type="number" id="startBalance" placeholder="Input Modal Awal">
-                <button onclick="saveBalance()" class="btn-primary">Set Modal</button>
+                <input type="number" id="startBalance" placeholder="Update Modal Awal">
+                <button onclick="saveBalance()" class="btn-primary">Simpan Modal</button>
                 <div class="stat-grid">
-                    <div class="stat-item"><span>Equity</span><span class="stat-val" id="val-balance">0</span></div>
+                    <div class="stat-item"><span>Equity Aktual</span><span class="stat-val" id="val-balance">0</span></div>
                     <div class="stat-item"><span>Winrate</span><span class="stat-val" id="val-wr">0%</span></div>
                 </div>
             </div>
 
+            <!-- Trade Input -->
             <div class="card">
-                <h3>📝 Trading Journal</h3>
+                <h3>📝 Jurnal Trading</h3>
                 <input type="hidden" id="editIndex">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <input type="datetime-local" id="datetime">
                     <select id="asset">
                         <option value="XAUUSD">XAUUSD (Gold)</option>
-                        <option value="Crypto">Crypto Asset</option>
+                        <option value="Crypto">Crypto (BTC/ETH)</option>
+                        <option value="Forex">Forex (Pairs)</option>
                     </select>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-                    <input type="number" id="entry" placeholder="Entry">
-                    <input type="number" id="sl" placeholder="SL">
-                    <input type="number" id="tp" placeholder="TP">
+                    <input type="number" id="entry" placeholder="Harga Entry">
+                    <input type="number" id="sl" placeholder="Stop Loss">
+                    <input type="number" id="tp" placeholder="Take Profit">
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <select id="result">
                         <option value="Win">Win ✅</option>
                         <option value="Loss">Loss ❌</option>
                     </select>
-                    <input type="number" id="profit" placeholder="P/L (+/-)">
+                    <input type="number" id="profit" placeholder="Nominal P/L (+/-)">
                 </div>
-                <button onclick="saveTrade()" class="btn-success">Simpan Trade</button>
+                <textarea id="note" placeholder="Catatan trading (alasan entry/evaluasi)..."></textarea>
+                <button onclick="saveTrade()" class="btn-success">Simpan Jurnal</button>
             </div>
 
+            <!-- Chart -->
             <div class="card">
-                <h3>📈 Performance Chart</h3>
-                <canvas id="equityChart"></canvas>
+                <h3>📈 Kurva Pertumbuhan</h3>
+                <canvas id="equityChart" style="margin-top: 1rem;"></canvas>
             </div>
 
+            <!-- Official Links -->
             <div class="card">
-                <h3>🔗 Official Links</h3>
+                <h3>🚀 Komunitas & Layanan</h3>
                 <div class="broker-box">
-                    <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background: #b45309;">Gold Broker (XAU)</a>
-                    <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background: #1d4ed8;">Crypto Broker</a>
-                    <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">Discord Community</a>
+                    <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background: #b45309;">🏆 Broker Terbaik XAUUSD</a>
+                    <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background: #1d4ed8;">₿ Broker Terbaik Crypto</a>
+                    <a href="https://t.me/faiztradingfc" target="_blank" class="broker-link" style="background: #0ea5e9;">✈️ Join Grup Telegram Signal</a>
+                    <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">👾 Join Discord Komunitas</a>
+                    <a href="https://wa.me/6285769714035" target="_blank" class="broker-link" style="background: #22c55e;">💬 Chat Admin (WhatsApp)</a>
                 </div>
-                <button onclick="exportData()" style="background:rgba(255,255,255,0.1); font-size: 10px; margin-top: 15px;">BACKUP DATA (JSON)</button>
+                <button onclick="exportData()" style="background:rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 11px; margin-top: 15px;">📥 BACKUP DATA (JSON)</button>
             </div>
 
+            <!-- History -->
             <div class="card" style="grid-column: 1 / -1;">
-                <h3>📜 History Trading</h3>
+                <h3>📜 Riwayat Trading</h3>
                 <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;"></div>
             </div>
 
         </div>
     </div>
 
+    <!-- Pendaftaran Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('SW Registered!', reg);
+                }).catch(err => console.log('SW Error', err));
+            });
+        }
+    </script>
+
     <script>
         let currentUser = "";
         let equityChart;
+        let deferredPrompt;
 
+        // PWA Install Prompt Logic
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').style.display = 'block';
+        });
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User menerima instalasi PWA');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installBtn').style.display = 'none';
+                });
+            }
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            localStorage.setItem('fc_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+        }
+
+        // Authentication
         function signup() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Isi semua data!");
+            if(!email || !pass) return alert("Isi email dan password!");
             let users = JSON.parse(localStorage.getItem('fc_users')) || [];
-            if(users.some(u => u.email === email)) return alert("User sudah ada!");
+            if(users.some(u => u.email === email)) return alert("Email sudah terdaftar!");
             users.push({email, pass});
             localStorage.setItem('fc_users', JSON.stringify(users));
-            alert("Berhasil Daftar!");
+            alert("Pendaftaran Berhasil! Silakan Login.");
         }
 
         function login() {
@@ -139,7 +212,7 @@
                 currentUser = email;
                 localStorage.setItem('fc_session', email);
                 initApp();
-            } else { alert("Login Salah!"); }
+            } else { alert("Email atau Password salah!"); }
         }
 
         function initApp() {
@@ -151,32 +224,52 @@
 
         function logout() { localStorage.removeItem('fc_session'); location.reload(); }
 
+        // Data Management
         function saveBalance() {
             localStorage.setItem(`bal_${currentUser}`, document.getElementById('startBalance').value);
             loadDashboard();
+            alert("Modal berhasil diperbarui!");
         }
 
         function saveTrade() {
             const trade = {
-                dt: document.getElementById('datetime').value,
+                dt: document.getElementById('datetime').value || new Date().toLocaleString(),
                 ast: document.getElementById('asset').value,
                 en: document.getElementById('entry').value,
                 sl: document.getElementById('sl').value,
                 tp: document.getElementById('tp').value,
                 res: document.getElementById('result').value,
-                pl: parseFloat(document.getElementById('profit').value) || 0
+                pl: parseFloat(document.getElementById('profit').value) || 0,
+                note: document.getElementById('note').value
             };
             let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
             trades.push(trade);
             localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
+            
+            // Clear inputs
+            document.getElementById('entry').value = '';
+            document.getElementById('sl').value = '';
+            document.getElementById('tp').value = '';
+            document.getElementById('profit').value = '';
+            document.getElementById('note').value = '';
+            
             loadDashboard();
+        }
+
+        function deleteTrade(index) {
+            if(confirm("Hapus jurnal ini?")) {
+                let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
+                trades.splice(index, 1);
+                localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
+                loadDashboard();
+            }
         }
 
         function loadDashboard() {
             const trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
             const startBal = parseFloat(localStorage.getItem(`bal_${currentUser}`)) || 0;
             const curr = document.getElementById('currency').value;
-            const sym = curr === "USD" ? "$" : "Rp";
+            const sym = curr === "USD" ? "$" : "Rp ";
 
             let currentBal = startBal;
             let wins = 0;
@@ -189,15 +282,24 @@
                 if(t.res === "Win") wins++;
                 html += `
                     <div class="trade-card ${t.res === 'Win' ? 'win-border' : 'loss-border'}">
-                        <strong>${t.ast}</strong> | <small>${t.dt.replace('T', ' ')}</small><br>
-                        E: ${t.en} | SL: ${t.sl} | TP: ${t.tp}<br>
-                        <span style="color:${t.res === 'Win' ? '#10b981' : '#ef4444'}">P/L: ${sym}${t.pl} (${t.res})</span>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <strong>${t.ast}</strong> 
+                            <small style="opacity:0.7;">${t.dt.replace('T', ' ')}</small>
+                        </div>
+                        <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px;">
+                            Entry: ${t.en} | SL: ${t.sl} | TP: ${t.tp}
+                        </div>
+                        <div style="font-weight:bold; color:${t.res === 'Win' ? '#10b981' : '#ef4444'}">
+                            P/L: ${sym}${t.pl} (${t.res})
+                        </div>
+                        <div style="font-size: 0.8rem; margin-top: 5px; font-style: italic;">"${t.note}"</div>
+                        <button class="del-btn" onclick="deleteTrade(${i})">Hapus</button>
                     </div>`;
             });
 
-            document.getElementById('val-balance').innerText = sym + currentBal.toLocaleString();
+            document.getElementById('val-balance').innerText = sym + currentBal.toLocaleString('id-ID');
             document.getElementById('val-wr').innerText = trades.length ? ((wins/trades.length)*100).toFixed(1) + '%' : '0%';
-            document.getElementById('tradeHistory').innerHTML = html;
+            document.getElementById('tradeHistory').innerHTML = html || "<p style='opacity:0.5'>Belum ada data trading.</p>";
             drawChart(pts);
         }
 
@@ -207,8 +309,8 @@
             equityChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: data.map((_, i) => i),
-                    datasets: [{ data: data, borderColor: '#3b82f6', fill: false, tension: 0.3 }]
+                    labels: data.map((_, i) => i === 0 ? "Start" : "T"+i),
+                    datasets: [{ data: data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 }]
                 },
                 options: { plugins: { legend: { display: false } } }
             });
@@ -216,14 +318,17 @@
 
         function exportData() {
             const data = localStorage.getItem(`trades_${currentUser}`);
+            if(!data) return alert("Belum ada data untuk dibackup!");
             const blob = new Blob([data], {type: 'application/json'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `backup_${currentUser}.json`;
+            a.download = `FC_Trader_Backup_${currentUser}.json`;
             a.click();
         }
 
+        // Auto initialization
         window.onload = () => {
+            if(localStorage.getItem('fc_theme') === 'light') document.body.classList.add('light');
             const session = localStorage.getItem('fc_session');
             if(session) { currentUser = session; initApp(); }
         };
