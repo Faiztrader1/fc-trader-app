@@ -12,7 +12,6 @@
             --accent: #3b82f6; --green: #10b981; --red: #ef4444; --border: rgba(255,255,255,0.1);
         }
         
-        /* Tema Terang (Light Mode) */
         .light {
             --bg: #f8fafc; --card: #ffffff; --input: #f1f5f9; --text: #0f172a;
             --border: #e2e8f0;
@@ -35,7 +34,7 @@
         .btn-success { background: var(--green); color: white; }
         .btn-danger { background: var(--red); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); width: auto; padding: 0.5rem 0.8rem; }
-        .btn-install { background: #f59e0b; color: white; width: auto; padding: 0.5rem 0.8rem; display: none; } /* Muncul jika bisa diinstall */
+        .btn-install { background: #f59e0b; color: white; width: auto; padding: 0.5rem 0.8rem; display: none; }
         
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem; }
         .stat-item { background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.8rem; border: 1px solid var(--border); text-align: center; }
@@ -51,6 +50,7 @@
         .broker-link:hover { transform: scale(1.02); }
         
         .hidden { display: none; }
+        .loading-text { font-size: 0.8rem; color: #f59e0b; text-align: center; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
@@ -64,22 +64,20 @@
         </div>
     </nav>
 
-    <!-- Login Page -->
     <div id="loginPage" class="container">
         <div class="card" style="grid-column: 1 / -1; max-width: 400px; margin: 4rem auto;">
             <h2 style="text-align: center; margin-bottom: 1.5rem;">Access Portal</h2>
             <input type="email" id="email" placeholder="Email Address">
             <input type="password" id="password" placeholder="Password">
-            <button onclick="login()" class="btn-primary">Login ke Dashboard</button>
+            <button id="authBtn" onclick="login()" class="btn-primary">Login ke Dashboard</button>
             <button onclick="signup()" style="background:transparent; color:var(--accent); border:1px solid var(--accent); margin-top:10px;">Daftar Akun Baru</button>
+            <div id="loadingAuth" class="loading-text">Menghubungkan ke database Cloud... Mhn tunggu</div>
         </div>
     </div>
 
-    <!-- Main App -->
     <div id="appPage" class="hidden">
         <div class="container">
             
-            <!-- Modal & Stats -->
             <div class="card">
                 <h3>💰 Modal & Currency</h3>
                 <select id="currency" onchange="loadDashboard()">
@@ -94,7 +92,6 @@
                 </div>
             </div>
 
-            <!-- Trade Input -->
             <div class="card">
                 <h3>📝 Jurnal Trading</h3>
                 <input type="hidden" id="editIndex">
@@ -102,8 +99,7 @@
                     <input type="datetime-local" id="datetime">
                     <select id="asset">
                         <option value="XAUUSD">XAUUSD (Gold)</option>
-                        <option value="Crypto">Crypto (BTC/ETH)</option>
-                        <option value="Forex">Forex (Pairs)</option>
+                        <option value="Crypto">Crypto (BTC/Altcoin)</option>
                     </select>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
@@ -122,13 +118,11 @@
                 <button onclick="saveTrade()" class="btn-success">Simpan Jurnal</button>
             </div>
 
-            <!-- Chart -->
             <div class="card">
                 <h3>📈 Kurva Pertumbuhan</h3>
                 <canvas id="equityChart" style="margin-top: 1rem;"></canvas>
             </div>
 
-            <!-- Official Links -->
             <div class="card">
                 <h3>🚀 Komunitas & Layanan</h3>
                 <div class="broker-box">
@@ -138,10 +132,9 @@
                     <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">👾 Join Discord Komunitas</a>
                     <a href="https://wa.me/6285769714035" target="_blank" class="broker-link" style="background: #22c55e;">💬 Chat Admin (WhatsApp)</a>
                 </div>
-                <button onclick="exportData()" style="background:rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 11px; margin-top: 15px;">📥 BACKUP DATA (JSON)</button>
+                <button onclick="exportData()" style="background:rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 11px; margin-top: 15px;">📥 BACKUP DATA (JSON MANUAL)</button>
             </div>
 
-            <!-- History -->
             <div class="card" style="grid-column: 1 / -1;">
                 <h3>📜 Riwayat Trading</h3>
                 <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;"></div>
@@ -150,18 +143,10 @@
         </div>
     </div>
 
-    <!-- Pendaftaran Service Worker -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(reg => {
-                    console.log('SW Registered!', reg);
-                }).catch(err => console.log('SW Error', err));
-            });
-        }
-    </script>
+        // URL SCRIPT ANDA SUDAH SAYA PASANG DI SINI SECARA OTOMATIS
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGoocGWx_6GUibCFXmqO4thcA3Fx4K1NTeKZcenn8T7kDncXsgEutzuSnUfued1GEcGw/exec";
 
-    <script>
         let currentUser = "";
         let equityChart;
         let deferredPrompt;
@@ -177,42 +162,70 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User menerima instalasi PWA');
-                    }
                     deferredPrompt = null;
                     document.getElementById('installBtn').style.display = 'none';
                 });
             }
         }
 
-        // Theme Toggle
         function toggleTheme() {
             document.body.classList.toggle('light');
             localStorage.setItem('fc_theme', document.body.classList.contains('light') ? 'light' : 'dark');
         }
 
-        // Authentication
-        function signup() {
+        // Authentication & Sync Cloud
+        async function signup() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             if(!email || !pass) return alert("Isi email dan password!");
-            let users = JSON.parse(localStorage.getItem('fc_users')) || [];
-            if(users.some(u => u.email === email)) return alert("Email sudah terdaftar!");
-            users.push({email, pass});
-            localStorage.setItem('fc_users', JSON.stringify(users));
-            alert("Pendaftaran Berhasil! Silakan Login.");
+            
+            document.getElementById('loadingAuth').style.display = 'block';
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "signup", email: email, pass: pass })
+                });
+                const resData = await response.json();
+                document.getElementById('loadingAuth').style.display = 'none';
+                alert(resData.message);
+            } catch (error) {
+                document.getElementById('loadingAuth').style.display = 'none';
+                alert("Gagal terhubung ke server cloud Sheets.");
+            }
         }
 
-        function login() {
+        async function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            const users = JSON.parse(localStorage.getItem('fc_users')) || [];
-            if(users.some(u => u.email === email && u.pass === pass)) {
-                currentUser = email;
-                localStorage.setItem('fc_session', email);
-                initApp();
-            } else { alert("Email atau Password salah!"); }
+            if(!email || !pass) return alert("Isi email dan password!");
+            
+            document.getElementById('loadingAuth').style.display = 'block';
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "login", email: email, pass: pass })
+                });
+                const resData = await response.json();
+                document.getElementById('loadingAuth').style.display = 'none';
+                
+                if(resData.status === "error") {
+                    alert(resData.message);
+                } else {
+                    currentUser = email;
+                    localStorage.setItem('fc_session', email);
+                    
+                    // Ambil riwayat dari Google Sheets untuk dimasukkan ke sistem lokal perangkat
+                    localStorage.setItem(`bal_${currentUser}`, resData.balance);
+                    localStorage.setItem(`trades_${currentUser}`, JSON.stringify(resData.trades));
+                    
+                    initApp();
+                }
+            } catch (error) {
+                document.getElementById('loadingAuth').style.display = 'none';
+                alert("Gagal Verifikasi Login Cloud. Pastikan Deployment Apps Script di Sheets diatur ke 'Anyone'.");
+            }
         }
 
         function initApp() {
@@ -225,28 +238,41 @@
         function logout() { localStorage.removeItem('fc_session'); location.reload(); }
 
         // Data Management
-        function saveBalance() {
-            localStorage.setItem(`bal_${currentUser}`, document.getElementById('startBalance').value);
+        async function saveBalance() {
+            const balVal = document.getElementById('startBalance').value;
+            localStorage.setItem(`bal_${currentUser}`, balVal);
             loadDashboard();
-            alert("Modal berhasil diperbarui!");
+            alert("Modal lokal diperbarui! Menyinkronkan ke Cloud Sheets...");
+            
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "saveBalance", email: currentUser, balance: balVal })
+            });
         }
 
-        function saveTrade() {
+        async function saveTrade() {
+            let rawProfit = parseFloat(document.getElementById('profit').value) || 0;
+            let statusRes = document.getElementById('result').value;
+            
+            // PERBAIKAN LOGIKA UTAMA: Jika status Loss, nominal profit otomatis dipaksa negatif secara matematika
+            let finalProfit = statusRes === "Loss" ? -Math.abs(rawProfit) : Math.abs(rawProfit);
+
             const trade = {
                 dt: document.getElementById('datetime').value || new Date().toLocaleString(),
                 ast: document.getElementById('asset').value,
                 en: document.getElementById('entry').value,
                 sl: document.getElementById('sl').value,
                 tp: document.getElementById('tp').value,
-                res: document.getElementById('result').value,
-                pl: parseFloat(document.getElementById('profit').value) || 0,
+                res: statusRes,
+                pl: finalProfit,
                 note: document.getElementById('note').value
             };
+            
             let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
             trades.push(trade);
             localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
             
-            // Clear inputs
+            // Bersihkan form inputan
             document.getElementById('entry').value = '';
             document.getElementById('sl').value = '';
             document.getElementById('tp').value = '';
@@ -254,14 +280,25 @@
             document.getElementById('note').value = '';
             
             loadDashboard();
+            
+            // Sinkronisasi baris data trade baru ke Google Sheets Anda
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "saveTrade", email: currentUser, trade: trade })
+            });
         }
 
-        function deleteTrade(index) {
-            if(confirm("Hapus jurnal ini?")) {
+        async function deleteTrade(index) {
+            if(confirm("Hapus jurnal ini dari Cloud & Lokal?")) {
                 let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
                 trades.splice(index, 1);
                 localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
                 loadDashboard();
+                
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "deleteTrade", email: currentUser, index: index })
+                });
             }
         }
 
@@ -277,9 +314,12 @@
             let html = "";
 
             trades.forEach((t, i) => {
-                currentBal += t.pl;
+                currentBal += t.pl; 
                 pts.push(currentBal);
                 if(t.res === "Win") wins++;
+                
+                let displayPl = t.pl < 0 ? `-${sym}${Math.abs(t.pl)}` : `+${sym}${t.pl}`;
+
                 html += `
                     <div class="trade-card ${t.res === 'Win' ? 'win-border' : 'loss-border'}">
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
@@ -290,7 +330,7 @@
                             Entry: ${t.en} | SL: ${t.sl} | TP: ${t.tp}
                         </div>
                         <div style="font-weight:bold; color:${t.res === 'Win' ? '#10b981' : '#ef4444'}">
-                            P/L: ${sym}${t.pl} (${t.res})
+                            P/L: ${displayPl} (${t.res})
                         </div>
                         <div style="font-size: 0.8rem; margin-top: 5px; font-style: italic;">"${t.note}"</div>
                         <button class="del-btn" onclick="deleteTrade(${i})">Hapus</button>
@@ -326,7 +366,6 @@
             a.click();
         }
 
-        // Auto initialization
         window.onload = () => {
             if(localStorage.getItem('fc_theme') === 'light') document.body.classList.add('light');
             const session = localStorage.getItem('fc_session');
