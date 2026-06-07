@@ -1,376 +1,1390 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FC Trader Pro AI PREMIUM</title>
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg: #020617; --card: #0f172a; --input: #1e293b; --text: #f8fafc;
-            --accent: #3b82f6; --green: #10b981; --red: #ef4444; --border: rgba(255,255,255,0.1);
-        }
-        
-        .light {
-            --bg: #f8fafc; --card: #ffffff; --input: #f1f5f9; --text: #0f172a;
-            --border: #e2e8f0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); transition: 0.3s; }
-        
-        .navbar { background: var(--card); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
-        .nav-buttons { display: flex; gap: 8px; }
-        
-        .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
-        .card { background: var(--card); border-radius: 1.2rem; padding: 1.5rem; border: 1px solid var(--border); transition: 0.3s; }
-        
-        input, select, textarea { width: 100%; padding: 0.75rem; margin: 0.5rem 0 1rem; border-radius: 0.6rem; background: var(--input); color: var(--text); border: 1px solid var(--border); outline: none; font-size: 0.9rem; }
-        button { padding: 0.75rem; border-radius: 0.6rem; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 0.5rem; }
-        button:hover { opacity: 0.9; }
-        
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-success { background: var(--green); color: white; }
-        .btn-danger { background: var(--red); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); width: auto; padding: 0.5rem 0.8rem; }
-        .btn-install { background: #f59e0b; color: white; width: auto; padding: 0.5rem 0.8rem; display: none; }
-        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem; }
-        .stat-item { background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.8rem; border: 1px solid var(--border); text-align: center; }
-        .stat-val { font-size: 1.1rem; font-weight: 700; color: var(--accent); display: block; }
-        
-        .trade-card { background: rgba(255,255,255,0.02); border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); font-size: 0.85rem; position: relative; }
-        .win-border { border-left-color: var(--green); }
-        .loss-border { border-left-color: var(--red); }
-        .del-btn { background: rgba(239, 68, 68, 0.1); color: var(--red); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--red); cursor: pointer; font-size: 0.7rem; width: auto; margin-top: 10px; }
-        
-        .broker-box { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
-        .broker-link { text-decoration: none; padding: 0.7rem; border-radius: 0.6rem; text-align: center; font-weight: 700; color: white; font-size: 0.8rem; transition: 0.2s; }
-        .broker-link:hover { transform: scale(1.02); }
-        
-        .hidden { display: none; }
-        .loading-text { font-size: 0.8rem; color: #f59e0b; text-align: center; margin-top: 5px; display: none; }
-    </style>
+  <title>FC Trader Pro</title>
+
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg: #020617;
+      --topbar: #0f172a;
+      --card: #0f172a;
+      --card-soft: #111827;
+      --input: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --green: #10b981;
+      --red: #ef4444;
+      --border: rgba(255,255,255,0.12);
+      --shadow: rgba(0,0,0,0.35);
+    }
+
+    body.light {
+      --bg: #f8fafc;
+      --topbar: #ffffff;
+      --card: #ffffff;
+      --card-soft: #f8fafc;
+      --input: #f1f5f9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: rgba(15,23,42,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      transition: 0.25s;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      height: 86px;
+      background: var(--topbar);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-size: 25px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -1px;
+    }
+
+    .brand span {
+      font-size: 14px;
+      color: var(--text);
+      margin-left: 4px;
+      letter-spacing: 0;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:hover {
+      opacity: 0.92;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: #ffffff;
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-small {
+      width: auto;
+      padding: 11px 16px;
+      border-radius: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 18px 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 10px 28px var(--shadow);
+    }
+
+    .card h3 {
+      font-size: 25px;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 0 0 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 56px;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #8a94a6;
+    }
+
+    .input-help {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: -10px;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat-item {
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px 10px;
+      text-align: center;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .stat-val {
+      display: block;
+      color: var(--accent);
+      font-size: 25px;
+      font-weight: 900;
+      word-break: break-word;
+    }
+
+    .stat-full {
+      grid-column: 1 / 3;
+    }
+
+    .auth-container {
+      min-height: calc(100vh - 86px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 18px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 10px 28px var(--shadow);
+    }
+
+    .auth-card h2 {
+      text-align: center;
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: var(--input);
+      padding: 6px;
+      border-radius: 17px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .auth-tab {
+      margin: 0;
+      background: transparent;
+      color: var(--text);
+      border-radius: 13px;
+      padding: 13px;
+    }
+
+    .auth-tab.active {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .auth-note {
+      margin-top: 14px;
+      text-align: center;
+      color: var(--accent);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .loading-text {
+      display: none;
+      margin-top: 12px;
+      text-align: center;
+      color: #f59e0b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .cloud-status {
+      margin-top: 12px;
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 15px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    canvas {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .trade-history {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .trade-card {
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: 18px;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .trade-card.win-border {
+      border-left-color: var(--green);
+    }
+
+    .trade-card.loss-border {
+      border-left-color: var(--red);
+    }
+
+    .trade-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+
+    .trade-date {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .trade-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .trade-profit {
+      font-weight: 900;
+      margin-top: 8px;
+    }
+
+    .profit-win {
+      color: var(--green);
+    }
+
+    .profit-loss {
+      color: var(--red);
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--text);
+      margin-top: 8px;
+      opacity: 0.85;
+    }
+
+    .delete-btn {
+      width: auto;
+      background: rgba(239,68,68,0.1);
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-top: 12px;
+      font-size: 12px;
+    }
+
+    .broker-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .broker-link {
+      text-decoration: none;
+      text-align: center;
+      color: #ffffff;
+      padding: 13px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .bottom-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    .section-full {
+      grid-column: 1 / -1;
+    }
+
+    @media(max-width: 540px) {
+      .navbar {
+        height: 78px;
+        padding: 0 22px;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .container {
+        padding: 18px 16px 50px;
+        display: block;
+      }
+
+      .card {
+        margin-bottom: 22px;
+        padding: 22px;
+        border-radius: 26px;
+      }
+
+      .auth-container {
+        align-items: flex-start;
+        padding-top: 70px;
+      }
+
+      .auth-card {
+        padding: 24px;
+      }
+
+      .auth-card h2 {
+        font-size: 30px;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+      }
+
+      input,
+      select,
+      textarea {
+        font-size: 15px;
+        padding: 13px;
+      }
+
+      .stat-val {
+        font-size: 23px;
+      }
+    }
+
+    @media(max-width: 390px) {
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-full {
+        grid-column: auto;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-    <nav class="navbar">
-        <div style="font-weight: 800; color: var(--accent); font-size: 1.2rem;">FC TRADER <span style="font-size: 0.7rem; color: var(--text);">PRO</span></div>
-        <div class="nav-buttons">
-            <button id="installBtn" class="btn-install" onclick="installPWA()">📥 Install App</button>
-            <button onclick="toggleTheme()" class="btn-outline">🌓</button>
-            <button id="logoutBtn" onclick="logout()" class="btn-danger hidden" style="width: auto; padding: 0.5rem 0.8rem;">Exit</button>
-        </div>
-    </nav>
+  <nav class="navbar">
+    <div class="brand">FC TRADER <span>PRO</span></div>
 
-    <div id="loginPage" class="container">
-        <div class="card" style="grid-column: 1 / -1; max-width: 400px; margin: 4rem auto;">
-            <h2 style="text-align: center; margin-bottom: 1.5rem;">Access Portal</h2>
-            <input type="email" id="email" placeholder="Email Address">
-            <input type="password" id="password" placeholder="Password">
-            <button id="authBtn" onclick="login()" class="btn-primary">Login ke Dashboard</button>
-            <button onclick="signup()" style="background:transparent; color:var(--accent); border:1px solid var(--accent); margin-top:10px;">Daftar Akun Baru</button>
-            <div id="loadingAuth" class="loading-text">Menghubungkan ke database Cloud... Mhn tunggu</div>
-        </div>
+    <div class="nav-actions">
+      <button id="installBtn" class="btn-outline btn-small hidden" onclick="installPWA()">Install</button>
+      <button onclick="toggleTheme()" class="btn-outline btn-small">🌓</button>
+      <button id="logoutBtn" onclick="logout()" class="btn-danger btn-small hidden">Exit</button>
     </div>
+  </nav>
 
-    <div id="appPage" class="hidden">
-        <div class="container">
-            
-            <div class="card">
-                <h3>💰 Modal & Currency</h3>
-                <select id="currency" onchange="loadDashboard()">
-                    <option value="USD">Mata Uang: USD ($)</option>
-                    <option value="IDR">Mata Uang: IDR (Rp)</option>
-                </select>
-                <input type="number" id="startBalance" placeholder="Update Modal Awal">
-                <button onclick="saveBalance()" class="btn-primary">Simpan Modal</button>
-                <div class="stat-grid">
-                    <div class="stat-item"><span>Equity Aktual</span><span class="stat-val" id="val-balance">0</span></div>
-                    <div class="stat-item"><span>Winrate</span><span class="stat-val" id="val-wr">0%</span></div>
-                </div>
-            </div>
+  <div id="loginPage" class="auth-container">
+    <div class="auth-card">
 
-            <div class="card">
-                <h3>📝 Jurnal Trading</h3>
-                <input type="hidden" id="editIndex">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <input type="datetime-local" id="datetime">
-                    <select id="asset">
-                        <option value="XAUUSD">XAUUSD (Gold)</option>
-                        <option value="Crypto">Crypto (BTC/Altcoin)</option>
-                    </select>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-                    <input type="number" id="entry" placeholder="Harga Entry">
-                    <input type="number" id="sl" placeholder="Stop Loss">
-                    <input type="number" id="tp" placeholder="Take Profit">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <select id="result">
-                        <option value="Win">Win ✅</option>
-                        <option value="Loss">Loss ❌</option>
-                    </select>
-                    <input type="number" id="profit" placeholder="Nominal P/L (+/-)">
-                </div>
-                <textarea id="note" placeholder="Catatan trading (alasan entry/evaluasi)..."></textarea>
-                <button onclick="saveTrade()" class="btn-success">Simpan Jurnal</button>
-            </div>
+      <h2 id="authTitle">Masuk ke Akun</h2>
+      <div id="authSubtitle" class="auth-subtitle">
+        Login untuk membuka dashboard dan mengambil data dari Google Sheet.
+      </div>
 
-            <div class="card">
-                <h3>📈 Kurva Pertumbuhan</h3>
-                <canvas id="equityChart" style="margin-top: 1rem;"></canvas>
-            </div>
+      <div class="auth-tabs">
+        <button id="loginTab" class="auth-tab active" onclick="setAuthMode('login')">Login</button>
+        <button id="registerTab" class="auth-tab" onclick="setAuthMode('register')">Daftar Baru</button>
+      </div>
 
-            <div class="card">
-                <h3>🚀 Komunitas & Layanan</h3>
-                <div class="broker-box">
-                    <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background: #b45309;">🏆 Broker Terbaik XAUUSD</a>
-                    <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background: #1d4ed8;">₿ Broker Terbaik Crypto</a>
-                    <a href="https://t.me/faiztradingfc" target="_blank" class="broker-link" style="background: #0ea5e9;">✈️ Join Grup Telegram Signal</a>
-                    <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background: #5865F2;">👾 Join Discord Komunitas</a>
-                    <a href="https://wa.me/6285769714035" target="_blank" class="broker-link" style="background: #22c55e;">💬 Chat Admin (WhatsApp)</a>
-                </div>
-                <button onclick="exportData()" style="background:rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 11px; margin-top: 15px;">📥 BACKUP DATA (JSON MANUAL)</button>
-            </div>
+      <label>Email</label>
+      <input type="email" id="email" placeholder="contoh@email.com" autocomplete="email">
 
-            <div class="card" style="grid-column: 1 / -1;">
-                <h3>📜 Riwayat Trading</h3>
-                <div id="tradeHistory" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;"></div>
-            </div>
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Minimal 4 karakter" autocomplete="current-password">
 
-        </div>
+      <button id="mainAuthBtn" onclick="submitAuth()" class="btn-primary">
+        Login ke Dashboard
+      </button>
+
+      <div id="authNote" class="auth-note">
+        Belum punya akun? Pilih tab Daftar Baru.
+      </div>
+
+      <div id="loadingAuth" class="loading-text">
+        Menghubungkan ke database Google Sheet...
+      </div>
+
+      <div class="cloud-status">
+        Data trading disimpan di Google Sheet. Jadi data tetap aman walaupun cache HP atau browser dibersihkan.
+      </div>
+
     </div>
+  </div>
 
-    <script>
-        // URL SCRIPT ANDA SUDAH SAYA PASANG DI SINI SECARA OTOMATIS
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGoocGWx_6GUibCFXmqO4thcA3Fx4K1NTeKZcenn8T7kDncXsgEutzuSnUfued1GEcGw/exec";
+  <div id="appPage" class="hidden">
 
-        let currentUser = "";
-        let equityChart;
-        let deferredPrompt;
+    <div class="container">
 
-        // PWA Install Prompt Logic
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBtn').style.display = 'block';
+      <div class="card">
+        <h3>💰 Modal & Currency</h3>
+
+        <label>Mata Uang Akun</label>
+        <select id="currency" onchange="currencyChanged()">
+          <option value="IDR">IDR Rupiah (Rp)</option>
+          <option value="USD">USD Dollar ($)</option>
+        </select>
+
+        <label>Modal Awal</label>
+        <input type="text" id="startBalance" placeholder="Rp150.000">
+        <div class="input-help" id="capitalHelp">
+          Contoh: Rp150.000 untuk IDR atau $150 untuk USD.
+        </div>
+
+        <button onclick="saveBalance()" class="btn-primary">Simpan Modal</button>
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <span class="stat-label">Equity Aktual</span>
+            <span class="stat-val" id="val-balance">Rp0</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Winrate</span>
+            <span class="stat-val" id="val-wr">0%</span>
+          </div>
+
+          <div class="stat-item stat-full">
+            <span class="stat-label">Total Trade</span>
+            <span class="stat-val" id="val-total">0</span>
+          </div>
+        </div>
+
+        <div class="bottom-note" id="lastSync">
+          Belum sinkron.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🧾 Jurnal Trading</h3>
+
+        <label>Tanggal dan Jam</label>
+        <input type="datetime-local" id="datetime">
+
+        <div class="grid-2">
+          <div>
+            <label>Pair/Aset</label>
+            <select id="asset">
+              <option value="XAUUSD">XAUUSD Gold</option>
+              <option value="BTCUSD">BTCUSD Crypto</option>
+              <option value="ETHUSD">ETHUSD Crypto</option>
+              <option value="EURUSD">EURUSD Forex</option>
+              <option value="GBPUSD">GBPUSD Forex</option>
+              <option value="USDJPY">USDJPY Forex</option>
+              <option value="US30">US30 Index</option>
+              <option value="CUSTOM">Lainnya</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Hasil</label>
+            <select id="result" onchange="updateProfitPlaceholder()">
+              <option value="Win">Win ✅</option>
+              <option value="Loss">Loss ❌</option>
+            </select>
+          </div>
+        </div>
+
+        <label id="customAssetLabel" class="hidden">Nama Pair/Aset Lainnya</label>
+        <input type="text" id="customAsset" class="hidden" placeholder="Contoh: NAS100">
+
+        <div class="grid-3">
+          <div>
+            <label>Harga Entry</label>
+            <input type="text" inputmode="decimal" id="entry" placeholder="Contoh: 2350.50">
+          </div>
+
+          <div>
+            <label>Stop Loss</label>
+            <input type="text" inputmode="decimal" id="sl" placeholder="Contoh: 2340">
+          </div>
+
+          <div>
+            <label>Take Profit</label>
+            <input type="text" inputmode="decimal" id="tp" placeholder="Contoh: 2370">
+          </div>
+        </div>
+
+        <div class="input-help">
+          Entry, SL, dan TP adalah harga market. Bukan Rupiah atau Dollar modal.
+        </div>
+
+        <label id="profitLabel">Nominal Profit/Loss</label>
+        <input type="text" inputmode="decimal" id="profit" placeholder="Rp10.000">
+        <div class="input-help" id="profitHelp">
+          Isi nominal P/L dalam Rupiah. Jika Loss, sistem otomatis membuat nilainya minus.
+        </div>
+
+        <label>Catatan Trading</label>
+        <textarea id="note" placeholder="Alasan entry, setup, kesalahan, atau evaluasi..."></textarea>
+
+        <button onclick="saveTrade()" class="btn-success">Simpan Jurnal</button>
+      </div>
+
+      <div class="card">
+        <h3>📈 Kurva Pertumbuhan</h3>
+        <canvas id="equityChart"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>🥧 Win vs Loss</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>🚀 Komunitas & Layanan</h3>
+
+        <div class="broker-box">
+          <a href="https://ma.valetax-indonesia.com/p/7322040" target="_blank" class="broker-link" style="background:#b45309;">🏆 Broker XAUUSD</a>
+          <a href="https://www.bmwweb.biz/register?ref=TRADEFC" target="_blank" class="broker-link" style="background:#1d4ed8;">₿ Broker Crypto</a>
+          <a href="https://t.me/faiztradingfc" target="_blank" class="broker-link" style="background:#0ea5e9;">✈️ Grup Telegram</a>
+          <a href="https://discord.gg/J7ucEJgYf" target="_blank" class="broker-link" style="background:#5865F2;">👾 Discord Komunitas</a>
+          <a href="https://wa.me/6285769714035" target="_blank" class="broker-link" style="background:#22c55e;">💬 WhatsApp Admin</a>
+        </div>
+
+        <button onclick="manualSync()" class="btn-primary" style="margin-top:18px;">Refresh dari Cloud</button>
+        <button onclick="exportData()" class="btn-outline" style="margin-top:10px;">Backup JSON Manual</button>
+
+        <div class="bottom-note">
+          Backup JSON hanya cadangan tambahan. Data utama tetap tersimpan di Google Sheet.
+        </div>
+      </div>
+
+      <div class="card section-full">
+        <h3>📜 Riwayat Trading</h3>
+        <div id="tradeHistory" class="trade-history">
+          <p style="color:var(--muted);">Belum ada data trading.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGoocGWx_6GUibCFXmqO4thcA3Fx4K1NTeKZcenn8T7kDncXsgEutzuSnUfued1GEcGw/exec";
+
+    let authMode = "login";
+    let currentUser = localStorage.getItem("fc_session") || "";
+    let currentCurrency = localStorage.getItem("fc_currency") || "IDR";
+    let cachedTrades = [];
+    let equityChart = null;
+    let pieChart = null;
+    let deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById("installBtn").classList.remove("hidden");
+    });
+
+    window.onload = function() {
+      if (localStorage.getItem("fc_theme") === "light") {
+        document.body.classList.add("light");
+      }
+
+      setDefaultDateTime();
+      updateCurrencyUI();
+
+      document.getElementById("asset").addEventListener("change", function() {
+        const showCustom = this.value === "CUSTOM";
+        document.getElementById("customAsset").classList.toggle("hidden", !showCustom);
+        document.getElementById("customAssetLabel").classList.toggle("hidden", !showCustom);
+      });
+
+      if (currentUser) {
+        openApp();
+        manualSync();
+      }
+    };
+
+    function apiPost(payload) {
+      return fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      }).then(function(response) {
+        return response.json();
+      });
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode;
+
+      const loginTab = document.getElementById("loginTab");
+      const registerTab = document.getElementById("registerTab");
+      const authTitle = document.getElementById("authTitle");
+      const authSubtitle = document.getElementById("authSubtitle");
+      const mainAuthBtn = document.getElementById("mainAuthBtn");
+      const authNote = document.getElementById("authNote");
+
+      if (mode === "login") {
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+
+        authTitle.innerText = "Masuk ke Akun";
+        authSubtitle.innerText = "Login untuk membuka dashboard dan mengambil data dari Google Sheet.";
+        mainAuthBtn.innerText = "Login ke Dashboard";
+        authNote.innerText = "Belum punya akun? Pilih tab Daftar Baru.";
+      } else {
+        registerTab.classList.add("active");
+        loginTab.classList.remove("active");
+
+        authTitle.innerText = "Daftar Akun Baru";
+        authSubtitle.innerText = "Buat akun baru agar jurnal trading tersimpan aman.";
+        mainAuthBtn.innerText = "Buat Akun Baru";
+        authNote.innerText = "Sudah punya akun? Pilih tab Login.";
+      }
+    }
+
+    function submitAuth() {
+      if (authMode === "login") {
+        login();
+      } else {
+        signup();
+      }
+    }
+
+    async function signup() {
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if (!email || !pass) {
+        alert("Email dan password wajib diisi.");
+        return;
+      }
+
+      if (pass.length < 4) {
+        alert("Password minimal 4 karakter.");
+        return;
+      }
+
+      showLoading(true);
+
+      try {
+        const data = await apiPost({
+          action: "signup",
+          email: email,
+          pass: pass
         });
 
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                    document.getElementById('installBtn').style.display = 'none';
-                });
+        alert(data.message);
+
+        if (data.status === "success") {
+          setAuthMode("login");
+        }
+
+      } catch (error) {
+        alert("Gagal daftar. Periksa koneksi atau deployment Apps Script.");
+      }
+
+      showLoading(false);
+    }
+
+    async function login() {
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if (!email || !pass) {
+        alert("Email dan password wajib diisi.");
+        return;
+      }
+
+      showLoading(true);
+
+      try {
+        const data = await apiPost({
+          action: "login",
+          email: email,
+          pass: pass
+        });
+
+        if (data.status === "error") {
+          alert(data.message);
+          showLoading(false);
+          return;
+        }
+
+        currentUser = data.email || email;
+        localStorage.setItem("fc_session", currentUser);
+
+        if (data.currency) {
+          currentCurrency = data.currency;
+          localStorage.setItem("fc_currency", currentCurrency);
+        }
+
+        openApp();
+
+        if (data.dashboard) {
+          applyDashboard(data.dashboard);
+        } else {
+          await manualSync();
+        }
+
+      } catch (error) {
+        alert("Gagal login. Pastikan Apps Script sudah Deploy sebagai Web App dan aksesnya Anyone.");
+      }
+
+      showLoading(false);
+    }
+
+    function showLoading(show) {
+      document.getElementById("loadingAuth").style.display = show ? "block" : "none";
+    }
+
+    function openApp() {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("appPage").classList.remove("hidden");
+      document.getElementById("logoutBtn").classList.remove("hidden");
+    }
+
+    function logout() {
+      localStorage.removeItem("fc_session");
+      localStorage.removeItem("fc_currency");
+      currentUser = "";
+      location.reload();
+    }
+
+    async function manualSync() {
+      if (!currentUser) {
+        return;
+      }
+
+      try {
+        const data = await apiPost({
+          action: "getDashboard",
+          email: currentUser
+        });
+
+        if (data.status === "success") {
+          applyDashboard(data);
+          document.getElementById("lastSync").innerText = "Terakhir sinkron: " + new Date().toLocaleString("id-ID");
+        } else {
+          alert(data.message);
+        }
+
+      } catch (error) {
+        alert("Gagal refresh data dari Google Sheet.");
+      }
+    }
+
+    async function saveBalance() {
+      if (!currentUser) {
+        alert("Silakan login dulu.");
+        return;
+      }
+
+      const currency = document.getElementById("currency").value;
+      const balanceText = document.getElementById("startBalance").value;
+      const balance = parseMoney(balanceText);
+
+      if (!balance || balance <= 0) {
+        alert("Modal awal tidak valid.");
+        return;
+      }
+
+      try {
+        const data = await apiPost({
+          action: "saveBalance",
+          email: currentUser,
+          currency: currency,
+          balance: balance
+        });
+
+        alert(data.message);
+
+        if (data.status === "success") {
+          currentCurrency = currency;
+          localStorage.setItem("fc_currency", currency);
+
+          if (data.dashboard) {
+            applyDashboard(data.dashboard);
+          } else {
+            await manualSync();
+          }
+        }
+
+      } catch (error) {
+        alert("Gagal menyimpan modal ke Google Sheet.");
+      }
+    }
+
+    async function saveTrade() {
+      if (!currentUser) {
+        alert("Silakan login dulu.");
+        return;
+      }
+
+      const selectedAsset = document.getElementById("asset").value;
+      const customAsset = document.getElementById("customAsset").value.trim();
+
+      const finalAsset = selectedAsset === "CUSTOM" ? customAsset : selectedAsset;
+
+      const result = document.getElementById("result").value;
+      const profitRaw = parseMoney(document.getElementById("profit").value);
+
+      if (!finalAsset) {
+        alert("Pair atau aset wajib diisi.");
+        return;
+      }
+
+      if (!profitRaw || profitRaw <= 0) {
+        alert("Nominal Profit/Loss wajib diisi. Isi angka positif saja.");
+        return;
+      }
+
+      const trade = {
+        dt: document.getElementById("datetime").value || new Date().toISOString(),
+        currency: document.getElementById("currency").value,
+        ast: finalAsset,
+        en: parsePrice(document.getElementById("entry").value),
+        sl: parsePrice(document.getElementById("sl").value),
+        tp: parsePrice(document.getElementById("tp").value),
+        res: result,
+        pl: profitRaw,
+        note: document.getElementById("note").value.trim()
+      };
+
+      try {
+        const data = await apiPost({
+          action: "saveTrade",
+          email: currentUser,
+          trade: trade
+        });
+
+        if (data.status === "error") {
+          alert(data.message);
+          return;
+        }
+
+        clearJournalForm();
+
+        if (data.dashboard) {
+          applyDashboard(data.dashboard);
+        } else {
+          await manualSync();
+        }
+
+        alert("Jurnal berhasil disimpan.");
+
+      } catch (error) {
+        alert("Gagal menyimpan jurnal ke Google Sheet.");
+      }
+    }
+
+    async function deleteTrade(index) {
+      const ok = confirm("Hapus jurnal ini dari Google Sheet?");
+      if (!ok) {
+        return;
+      }
+
+      try {
+        const data = await apiPost({
+          action: "deleteTrade",
+          email: currentUser,
+          index: index
+        });
+
+        alert(data.message);
+
+        if (data.dashboard) {
+          applyDashboard(data.dashboard);
+        } else {
+          await manualSync();
+        }
+
+      } catch (error) {
+        alert("Gagal menghapus jurnal.");
+      }
+    }
+
+    function applyDashboard(data) {
+      currentCurrency = data.currency || currentCurrency || "IDR";
+      localStorage.setItem("fc_currency", currentCurrency);
+
+      cachedTrades = data.trades || [];
+
+      document.getElementById("currency").value = currentCurrency;
+      document.getElementById("startBalance").value = formatMoneyInput(data.capital || 0, currentCurrency);
+
+      document.getElementById("val-balance").innerText = data.balanceFormatted || formatMoney(data.balanceRaw || 0, currentCurrency);
+      document.getElementById("val-wr").innerText = (data.winrate || "0.0") + "%";
+      document.getElementById("val-total").innerText = data.total || 0;
+
+      updateCurrencyUI();
+      drawEquityChart(data.points || [data.capital || 0]);
+      drawPieChart(data.win || 0, data.loss || 0);
+      renderTrades(cachedTrades);
+    }
+
+    function renderTrades(trades) {
+      const box = document.getElementById("tradeHistory");
+
+      if (!trades || trades.length === 0) {
+        box.innerHTML = "<p style='color:var(--muted);'>Belum ada data trading.</p>";
+        return;
+      }
+
+      let html = "";
+
+      trades.slice().reverse().forEach(function(t, reverseIndex) {
+        const realIndex = trades.length - 1 - reverseIndex;
+        const isWin = t.res === "Win" || t.result === "Win";
+        const cls = isWin ? "win-border" : "loss-border";
+        const profitCls = isWin ? "profit-win" : "profit-loss";
+        const symbolCurrency = t.currency || currentCurrency;
+
+        html += `
+          <div class="trade-card ${cls}">
+            <div class="trade-top">
+              <div>${escapeHTML(t.ast || t.asset || "-")}</div>
+              <div class="trade-date">${escapeHTML(t.dt || "-")}</div>
+            </div>
+
+            <div class="trade-meta">
+              Entry: ${formatPrice(t.en || t.entry)}<br>
+              SL: ${formatPrice(t.sl)} | TP: ${formatPrice(t.tp)}
+            </div>
+
+            <div class="trade-profit ${profitCls}">
+              P/L: ${formatMoney(t.pl || t.profit || 0, symbolCurrency)} (${escapeHTML(t.res || t.result || "-")})
+            </div>
+
+            <div class="trade-meta">
+              Balance setelah trade: ${formatMoney(t.balance || 0, currentCurrency)}
+            </div>
+
+            ${t.note ? `<div class="note">"${escapeHTML(t.note)}"</div>` : ""}
+
+            <button class="delete-btn" onclick="deleteTrade(${realIndex})">Hapus</button>
+          </div>
+        `;
+      });
+
+      box.innerHTML = html;
+    }
+
+    function drawEquityChart(points) {
+      const canvas = document.getElementById("equityChart");
+      const ctx = canvas.getContext("2d");
+
+      if (equityChart) {
+        equityChart.destroy();
+      }
+
+      equityChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: points.map(function(_, i) {
+            return i === 0 ? "Start" : "T" + i;
+          }),
+          datasets: [{
+            label: "Equity",
+            data: points,
+            borderColor: "#3b82f6",
+            backgroundColor: "rgba(59,130,246,0.14)",
+            fill: true,
+            tension: 0.35
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
             }
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light');
-            localStorage.setItem('fc_theme', document.body.classList.contains('light') ? 'light' : 'dark');
-        }
-
-        // Authentication & Sync Cloud
-        async function signup() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Isi email dan password!");
-            
-            document.getElementById('loadingAuth').style.display = 'block';
-            
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: "signup", email: email, pass: pass })
-                });
-                const resData = await response.json();
-                document.getElementById('loadingAuth').style.display = 'none';
-                alert(resData.message);
-            } catch (error) {
-                document.getElementById('loadingAuth').style.display = 'none';
-                alert("Gagal terhubung ke server cloud Sheets.");
-            }
-        }
-
-        async function login() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Isi email dan password!");
-            
-            document.getElementById('loadingAuth').style.display = 'block';
-            
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: "login", email: email, pass: pass })
-                });
-                const resData = await response.json();
-                document.getElementById('loadingAuth').style.display = 'none';
-                
-                if(resData.status === "error") {
-                    alert(resData.message);
-                } else {
-                    currentUser = email;
-                    localStorage.setItem('fc_session', email);
-                    
-                    // Ambil riwayat dari Google Sheets untuk dimasukkan ke sistem lokal perangkat
-                    localStorage.setItem(`bal_${currentUser}`, resData.balance);
-                    localStorage.setItem(`trades_${currentUser}`, JSON.stringify(resData.trades));
-                    
-                    initApp();
+          },
+          scales: {
+            y: {
+              ticks: {
+                callback: function(value) {
+                  return shortMoney(value, currentCurrency);
                 }
-            } catch (error) {
-                document.getElementById('loadingAuth').style.display = 'none';
-                alert("Gagal Verifikasi Login Cloud. Pastikan Deployment Apps Script di Sheets diatur ke 'Anyone'.");
+              }
             }
+          }
+        }
+      });
+    }
+
+    function drawPieChart(win, loss) {
+      const canvas = document.getElementById("pieChart");
+      const ctx = canvas.getContext("2d");
+
+      if (pieChart) {
+        pieChart.destroy();
+      }
+
+      pieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["Win", "Loss"],
+          datasets: [{
+            data: [win, loss],
+            backgroundColor: ["#10b981", "#ef4444"]
+          }]
+        },
+        options: {
+          responsive: true
+        }
+      });
+    }
+
+    function clearJournalForm() {
+      document.getElementById("entry").value = "";
+      document.getElementById("sl").value = "";
+      document.getElementById("tp").value = "";
+      document.getElementById("profit").value = "";
+      document.getElementById("note").value = "";
+      document.getElementById("customAsset").value = "";
+      setDefaultDateTime();
+    }
+
+    function currencyChanged() {
+      currentCurrency = document.getElementById("currency").value;
+      localStorage.setItem("fc_currency", currentCurrency);
+      updateCurrencyUI();
+    }
+
+    function updateCurrencyUI() {
+      const currency = document.getElementById("currency").value || currentCurrency || "IDR";
+      const symbol = currency === "IDR" ? "Rp" : "$";
+
+      document.getElementById("capitalHelp").innerText =
+        currency === "IDR"
+          ? "Contoh: Rp150.000 atau 150000."
+          : "Contoh: $150 atau 150.";
+
+      document.getElementById("profitLabel").innerText =
+        "Nominal Profit/Loss (" + symbol + ")";
+
+      document.getElementById("profitHelp").innerText =
+        currency === "IDR"
+          ? "Isi nominal P/L dalam Rupiah. Contoh: Rp10.000. Jika Loss, sistem otomatis membuat nilainya minus."
+          : "Isi nominal P/L dalam Dollar. Contoh: $10. Jika Loss, sistem otomatis membuat nilainya minus.";
+
+      document.getElementById("profit").placeholder =
+        currency === "IDR" ? "Rp10.000" : "$10";
+
+      document.getElementById("startBalance").placeholder =
+        currency === "IDR" ? "Rp150.000" : "$150";
+    }
+
+    function updateProfitPlaceholder() {
+      const result = document.getElementById("result").value;
+      const currency = document.getElementById("currency").value;
+      const example = currency === "IDR" ? "Rp10.000" : "$10";
+
+      document.getElementById("profit").placeholder =
+        result === "Loss" ? example + " nanti otomatis minus" : example;
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      localStorage.setItem("fc_theme", document.body.classList.contains("light") ? "light" : "dark");
+    }
+
+    function installPWA() {
+      if (!deferredPrompt) {
+        return;
+      }
+
+      deferredPrompt.prompt();
+
+      deferredPrompt.userChoice.then(function() {
+        deferredPrompt = null;
+        document.getElementById("installBtn").classList.add("hidden");
+      });
+    }
+
+    function exportData() {
+      const data = {
+        email: currentUser,
+        currency: currentCurrency,
+        exportedAt: new Date().toISOString(),
+        trades: cachedTrades
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json"
+      });
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "FC_Trader_Backup_" + currentUser + ".json";
+      a.click();
+    }
+
+    function setDefaultDateTime() {
+      const input = document.getElementById("datetime");
+      const now = new Date();
+
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+      input.value = now.toISOString().slice(0, 16);
+    }
+
+    function parseMoney(value) {
+      if (value === null || value === undefined) {
+        return 0;
+      }
+
+      let text = String(value)
+        .replace(/Rp/gi, "")
+        .replace(/\$/g, "")
+        .replace(/\s/g, "")
+        .trim();
+
+      if (!text) {
+        return 0;
+      }
+
+      if (text.includes(",") && text.includes(".")) {
+        text = text.replace(/\./g, "").replace(",", ".");
+      } else if (text.includes(".") && currentCurrency === "IDR") {
+        text = text.replace(/\./g, "");
+      } else if (text.includes(",")) {
+        text = text.replace(",", ".");
+      }
+
+      const num = Number(text);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function parsePrice(value) {
+      if (value === null || value === undefined) {
+        return "";
+      }
+
+      let text = String(value).trim();
+
+      if (!text) {
+        return "";
+      }
+
+      text = text.replace(",", ".");
+
+      const num = Number(text);
+
+      return isNaN(num) ? text : num;
+    }
+
+    function formatMoney(value, currency) {
+      const num = Number(value) || 0;
+      const curr = currency || currentCurrency || "IDR";
+
+      if (curr === "IDR") {
+        return "Rp" + num.toLocaleString("id-ID", {
+          maximumFractionDigits: 0
+        });
+      }
+
+      return "$" + num.toLocaleString("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatMoneyInput(value, currency) {
+      return formatMoney(value, currency);
+    }
+
+    function shortMoney(value, currency) {
+      const num = Number(value) || 0;
+
+      if (currency === "IDR") {
+        if (Math.abs(num) >= 1000000) {
+          return "Rp" + (num / 1000000).toFixed(1) + "jt";
         }
 
-        function initApp() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('appPage').classList.remove('hidden');
-            document.getElementById('logoutBtn').classList.remove('hidden');
-            loadDashboard();
+        if (Math.abs(num) >= 1000) {
+          return "Rp" + (num / 1000).toFixed(0) + "rb";
         }
 
-        function logout() { localStorage.removeItem('fc_session'); location.reload(); }
+        return "Rp" + num;
+      }
 
-        // Data Management
-        async function saveBalance() {
-            const balVal = document.getElementById('startBalance').value;
-            localStorage.setItem(`bal_${currentUser}`, balVal);
-            loadDashboard();
-            alert("Modal lokal diperbarui! Menyinkronkan ke Cloud Sheets...");
-            
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: "saveBalance", email: currentUser, balance: balVal })
-            });
-        }
+      return "$" + num.toLocaleString("en-US", {
+        maximumFractionDigits: 0
+      });
+    }
 
-        async function saveTrade() {
-            let rawProfit = parseFloat(document.getElementById('profit').value) || 0;
-            let statusRes = document.getElementById('result').value;
-            
-            // PERBAIKAN LOGIKA UTAMA: Jika status Loss, nominal profit otomatis dipaksa negatif secara matematika
-            let finalProfit = statusRes === "Loss" ? -Math.abs(rawProfit) : Math.abs(rawProfit);
+    function formatPrice(value) {
+      if (value === "" || value === null || value === undefined) {
+        return "-";
+      }
 
-            const trade = {
-                dt: document.getElementById('datetime').value || new Date().toLocaleString(),
-                ast: document.getElementById('asset').value,
-                en: document.getElementById('entry').value,
-                sl: document.getElementById('sl').value,
-                tp: document.getElementById('tp').value,
-                res: statusRes,
-                pl: finalProfit,
-                note: document.getElementById('note').value
-            };
-            
-            let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
-            trades.push(trade);
-            localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
-            
-            // Bersihkan form inputan
-            document.getElementById('entry').value = '';
-            document.getElementById('sl').value = '';
-            document.getElementById('tp').value = '';
-            document.getElementById('profit').value = '';
-            document.getElementById('note').value = '';
-            
-            loadDashboard();
-            
-            // Sinkronisasi baris data trade baru ke Google Sheets Anda
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: "saveTrade", email: currentUser, trade: trade })
-            });
-        }
+      const num = Number(value);
 
-        async function deleteTrade(index) {
-            if(confirm("Hapus jurnal ini dari Cloud & Lokal?")) {
-                let trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
-                trades.splice(index, 1);
-                localStorage.setItem(`trades_${currentUser}`, JSON.stringify(trades));
-                loadDashboard();
-                
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: "deleteTrade", email: currentUser, index: index })
-                });
-            }
-        }
+      if (isNaN(num)) {
+        return escapeHTML(value);
+      }
 
-        function loadDashboard() {
-            const trades = JSON.parse(localStorage.getItem(`trades_${currentUser}`)) || [];
-            const startBal = parseFloat(localStorage.getItem(`bal_${currentUser}`)) || 0;
-            const curr = document.getElementById('currency').value;
-            const sym = curr === "USD" ? "$" : "Rp ";
+      return num.toLocaleString("en-US", {
+        maximumFractionDigits: 5
+      });
+    }
 
-            let currentBal = startBal;
-            let wins = 0;
-            let pts = [startBal];
-            let html = "";
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
 
-            trades.forEach((t, i) => {
-                currentBal += t.pl; 
-                pts.push(currentBal);
-                if(t.res === "Win") wins++;
-                
-                let displayPl = t.pl < 0 ? `-${sym}${Math.abs(t.pl)}` : `+${sym}${t.pl}`;
-
-                html += `
-                    <div class="trade-card ${t.res === 'Win' ? 'win-border' : 'loss-border'}">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                            <strong>${t.ast}</strong> 
-                            <small style="opacity:0.7;">${t.dt.replace('T', ' ')}</small>
-                        </div>
-                        <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px;">
-                            Entry: ${t.en} | SL: ${t.sl} | TP: ${t.tp}
-                        </div>
-                        <div style="font-weight:bold; color:${t.res === 'Win' ? '#10b981' : '#ef4444'}">
-                            P/L: ${displayPl} (${t.res})
-                        </div>
-                        <div style="font-size: 0.8rem; margin-top: 5px; font-style: italic;">"${t.note}"</div>
-                        <button class="del-btn" onclick="deleteTrade(${i})">Hapus</button>
-                    </div>`;
-            });
-
-            document.getElementById('val-balance').innerText = sym + currentBal.toLocaleString('id-ID');
-            document.getElementById('val-wr').innerText = trades.length ? ((wins/trades.length)*100).toFixed(1) + '%' : '0%';
-            document.getElementById('tradeHistory').innerHTML = html || "<p style='opacity:0.5'>Belum ada data trading.</p>";
-            drawChart(pts);
-        }
-
-        function drawChart(data) {
-            const ctx = document.getElementById('equityChart').getContext('2d');
-            if(equityChart) equityChart.destroy();
-            equityChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map((_, i) => i === 0 ? "Start" : "T"+i),
-                    datasets: [{ data: data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 }]
-                },
-                options: { plugins: { legend: { display: false } } }
-            });
-        }
-
-        function exportData() {
-            const data = localStorage.getItem(`trades_${currentUser}`);
-            if(!data) return alert("Belum ada data untuk dibackup!");
-            const blob = new Blob([data], {type: 'application/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `FC_Trader_Backup_${currentUser}.json`;
-            a.click();
-        }
-
-        window.onload = () => {
-            if(localStorage.getItem('fc_theme') === 'light') document.body.classList.add('light');
-            const session = localStorage.getItem('fc_session');
-            if(session) { currentUser = session; initApp(); }
-        };
-    </script>
 </body>
 </html>
