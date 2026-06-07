@@ -4,10 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>FC Trader Pro</title>
+  <title>FC Trader Pro - Aplikasi Jurnal Trading, Trading Plan, dan Equity Tracker</title>
 
+  <meta name="description" content="FC Trader Pro adalah aplikasi jurnal trading untuk mencatat entry, stop loss, take profit, profit loss, winrate, equity curve, dan evaluasi trading harian. Cocok untuk trader forex, gold XAUUSD, crypto, dan index.">
+  <meta name="keywords" content="aplikasi jurnal trading, jurnal trading, trading journal, trading plan, equity tracker, jurnal forex, jurnal gold, jurnal crypto, XAUUSD journal, aplikasi trading Indonesia, FC Trader Pro">
+  <meta name="author" content="FC Trader Pro">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#020617">
+
+  <link rel="canonical" href="https://fc-trader-app.vercel.app/">
   <link rel="manifest" href="manifest.json">
+
+  <meta property="og:title" content="FC Trader Pro - Aplikasi Jurnal Trading dan Equity Tracker">
+  <meta property="og:description" content="Catat entry, stop loss, take profit, profit loss, winrate, dan perkembangan equity dalam satu aplikasi jurnal trading.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fc-trader-app.vercel.app/">
+  <meta property="og:image" content="https://fc-trader-app.vercel.app/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FC Trader Pro - Aplikasi Jurnal Trading">
+  <meta name="twitter:description" content="Aplikasi jurnal trading untuk forex, gold, crypto, dan index.">
+  <meta name="twitter:image" content="https://fc-trader-app.vercel.app/preview.png">
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FC Trader Pro",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web, Android, iOS",
+    "description": "FC Trader Pro adalah aplikasi jurnal trading untuk mencatat entry, stop loss, take profit, profit loss, winrate, equity curve, dan evaluasi trading harian.",
+    "url": "https://fc-trader-app.vercel.app/",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "IDR"
+    }
+  }
+  </script>
 
   <style>
     :root {
@@ -21,6 +57,7 @@
       --accent: #3b82f6;
       --green: #10b981;
       --red: #ef4444;
+      --yellow: #f59e0b;
       --border: rgba(255,255,255,0.12);
       --shadow: rgba(0,0,0,0.35);
     }
@@ -44,11 +81,19 @@
       font-family: Arial, sans-serif;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       background: var(--bg);
       color: var(--text);
       transition: 0.25s;
       min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
     }
 
     .navbar {
@@ -132,6 +177,154 @@
 
     .hidden {
       display: none !important;
+    }
+
+    .public-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 26px 18px 60px;
+    }
+
+    .seo-hero {
+      background: linear-gradient(180deg, rgba(59,130,246,0.18), rgba(59,130,246,0.02));
+      border: 1px solid var(--border);
+      border-radius: 34px;
+      padding: 42px 28px;
+      text-align: center;
+      box-shadow: 0 10px 28px var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .seo-badge {
+      display: inline-block;
+      background: rgba(16,185,129,0.12);
+      color: var(--green);
+      border: 1px solid rgba(16,185,129,0.35);
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .seo-hero h1 {
+      font-size: 46px;
+      line-height: 1.1;
+      color: var(--accent);
+      margin-bottom: 14px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .seo-hero h2 {
+      font-size: 25px;
+      line-height: 1.35;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .seo-hero p {
+      max-width: 780px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .seo-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .seo-actions button {
+      max-width: 260px;
+    }
+
+    .seo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .seo-tags span {
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .seo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin: 22px 0;
+    }
+
+    .seo-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 10px 28px var(--shadow);
+    }
+
+    .seo-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .seo-card p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .seo-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 10px 28px var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .seo-section h2 {
+      font-size: 28px;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .seo-section p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .faq-item {
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 12px;
+    }
+
+    .faq-item h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .faq-item p {
+      margin-bottom: 0;
     }
 
     .container {
@@ -246,11 +439,10 @@
     }
 
     .auth-container {
-      min-height: calc(100vh - 86px);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 28px 18px;
+      padding: 10px 0 0;
     }
 
     .auth-card {
@@ -313,7 +505,7 @@
       display: none;
       margin-top: 12px;
       text-align: center;
-      color: #f59e0b;
+      color: var(--yellow);
       font-size: 13px;
       line-height: 1.5;
     }
@@ -449,6 +641,40 @@
         font-size: 24px;
       }
 
+      .public-wrap {
+        padding: 18px 16px 50px;
+      }
+
+      .seo-hero {
+        padding: 30px 18px;
+        border-radius: 28px;
+      }
+
+      .seo-hero h1 {
+        font-size: 35px;
+      }
+
+      .seo-hero h2 {
+        font-size: 21px;
+      }
+
+      .seo-hero p {
+        font-size: 14px;
+      }
+
+      .seo-actions button {
+        max-width: 100%;
+      }
+
+      .seo-section {
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .seo-section h2 {
+        font-size: 24px;
+      }
+
       .container {
         padding: 18px 16px 50px;
         display: block;
@@ -458,11 +684,6 @@
         margin-bottom: 22px;
         padding: 22px;
         border-radius: 26px;
-      }
-
-      .auth-container {
-        align-items: flex-start;
-        padding-top: 70px;
       }
 
       .auth-card {
@@ -527,43 +748,156 @@
     </div>
   </nav>
 
-  <div id="loginPage" class="auth-container">
-    <div class="auth-card">
+  <main id="publicPage" class="public-wrap">
 
-      <h2 id="authTitle">Masuk ke Akun</h2>
-      <div id="authSubtitle" class="auth-subtitle">
-        Login untuk membuka dashboard dan mengambil data dari Google Sheet.
+    <section class="seo-hero">
+      <div class="seo-badge">Aplikasi jurnal trading berbasis cloud</div>
+
+      <h1>FC Trader Pro</h1>
+
+      <h2>Aplikasi Jurnal Trading, Trading Plan, dan Equity Tracker</h2>
+
+      <p>
+        FC Trader Pro membantu trader mencatat entry, stop loss, take profit,
+        profit loss, winrate, equity curve, dan evaluasi trading harian dalam satu dashboard.
+        Aplikasi ini cocok untuk trader forex, gold XAUUSD, crypto, dan index.
+      </p>
+
+      <div class="seo-actions">
+        <button onclick="scrollToLogin()" class="btn-primary">Mulai Gunakan Aplikasi</button>
+        <button onclick="scrollToInfo()" class="btn-outline">Lihat Fitur</button>
       </div>
 
-      <div class="auth-tabs">
-        <button id="loginTab" class="auth-tab active" onclick="setAuthMode('login')">Login</button>
-        <button id="registerTab" class="auth-tab" onclick="setAuthMode('register')">Daftar Baru</button>
+      <div class="seo-tags">
+        <span>Jurnal Trading</span>
+        <span>Trading Plan</span>
+        <span>Equity Tracker</span>
+        <span>Winrate</span>
+        <span>Forex</span>
+        <span>Gold XAUUSD</span>
+        <span>Crypto</span>
+      </div>
+    </section>
+
+    <section id="fitur" class="seo-grid">
+      <article class="seo-card">
+        <h3>📘 Jurnal Trading Harian</h3>
+        <p>
+          Catat pair, entry, stop loss, take profit, hasil trade, nominal profit loss,
+          dan catatan evaluasi agar proses trading lebih terukur.
+        </p>
+      </article>
+
+      <article class="seo-card">
+        <h3>📈 Equity Tracker</h3>
+        <p>
+          Pantau perkembangan modal melalui equity curve. Trader bisa melihat perubahan modal
+          dari setiap trade yang tersimpan.
+        </p>
+      </article>
+
+      <article class="seo-card">
+        <h3>🎯 Winrate Otomatis</h3>
+        <p>
+          Sistem menghitung winrate dari data jurnal yang sudah masuk. Hasil trading jadi lebih mudah dievaluasi.
+        </p>
+      </article>
+
+      <article class="seo-card">
+        <h3>☁️ Data Cloud</h3>
+        <p>
+          Data trading disimpan ke Google Sheet. Data tetap aman walaupun cache browser atau HP dibersihkan.
+        </p>
+      </article>
+    </section>
+
+    <section class="seo-section">
+      <h2>Apa itu FC Trader Pro?</h2>
+      <p>
+        FC Trader Pro adalah aplikasi jurnal trading Indonesia yang dirancang untuk membantu trader mencatat
+        aktivitas trading secara rapi. Aplikasi ini bisa dipakai untuk mencatat trading forex, gold XAUUSD,
+        crypto, dan index.
+      </p>
+      <p>
+        Dengan jurnal trading, trader dapat mengevaluasi kualitas entry, mengukur hasil win dan loss,
+        melihat perkembangan equity, dan memperbaiki trading plan berdasarkan data.
+      </p>
+    </section>
+
+    <section class="seo-section">
+      <h2>Pertanyaan Umum</h2>
+
+      <div class="faq-item">
+        <h3>Apakah FC Trader Pro bisa dipakai untuk jurnal trading forex?</h3>
+        <p>
+          Bisa. Aplikasi ini mendukung pencatatan pair forex seperti EURUSD, GBPUSD, USDJPY,
+          serta pair lain yang bisa ditulis manual.
+        </p>
       </div>
 
-      <label>Email</label>
-      <input type="email" id="email" placeholder="contoh@email.com" autocomplete="email">
-
-      <label>Password</label>
-      <input type="password" id="password" placeholder="Minimal 4 karakter" autocomplete="current-password">
-
-      <button id="mainAuthBtn" onclick="submitAuth()" class="btn-primary">
-        Login ke Dashboard
-      </button>
-
-      <div id="authNote" class="auth-note">
-        Belum punya akun? Pilih tab Daftar Baru.
+      <div class="faq-item">
+        <h3>Apakah bisa mencatat trading gold XAUUSD?</h3>
+        <p>
+          Bisa. FC Trader Pro menyediakan pilihan XAUUSD dan cocok untuk trader gold yang ingin mencatat entry,
+          stop loss, take profit, dan profit loss.
+        </p>
       </div>
 
-      <div id="loadingAuth" class="loading-text">
-        Menghubungkan ke database Google Sheet...
+      <div class="faq-item">
+        <h3>Apakah data trading akan hilang?</h3>
+        <p>
+          Data utama disimpan ke Google Sheet. Jadi data tidak bergantung penuh pada localStorage browser.
+          Selama akun dan database aktif, data bisa dibuka kembali setelah login.
+        </p>
       </div>
 
-      <div class="cloud-status">
-        Data trading disimpan di Google Sheet. Jadi data tetap aman walaupun cache HP atau browser dibersihkan.
+      <div class="faq-item">
+        <h3>Apakah bisa memakai Rupiah dan Dollar?</h3>
+        <p>
+          Bisa. FC Trader Pro mendukung IDR Rupiah dan USD Dollar. Format angka akan ditampilkan sebagai Rp atau $.
+        </p>
       </div>
+    </section>
 
-    </div>
-  </div>
+    <section id="loginPage" class="auth-container">
+      <div class="auth-card">
+
+        <h2 id="authTitle">Masuk ke Akun</h2>
+        <div id="authSubtitle" class="auth-subtitle">
+          Login untuk membuka dashboard dan mengambil data dari Google Sheet.
+        </div>
+
+        <div class="auth-tabs">
+          <button id="loginTab" class="auth-tab active" onclick="setAuthMode('login')">Login</button>
+          <button id="registerTab" class="auth-tab" onclick="setAuthMode('register')">Daftar Baru</button>
+        </div>
+
+        <label>Email</label>
+        <input type="email" id="email" placeholder="contoh@email.com" autocomplete="email">
+
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Minimal 4 karakter" autocomplete="current-password">
+
+        <button id="mainAuthBtn" onclick="submitAuth()" class="btn-primary">
+          Login ke Dashboard
+        </button>
+
+        <div id="authNote" class="auth-note">
+          Belum punya akun? Pilih tab Daftar Baru.
+        </div>
+
+        <div id="loadingAuth" class="loading-text">
+          Menghubungkan ke database Google Sheet...
+        </div>
+
+        <div class="cloud-status">
+          Data trading disimpan di Google Sheet. Jadi data tetap aman walaupun cache HP atau browser dibersihkan.
+        </div>
+
+      </div>
+    </section>
+
+  </main>
 
   <div id="appPage" class="hidden">
 
@@ -759,6 +1093,18 @@
       });
     }
 
+    function scrollToLogin() {
+      document.getElementById("loginPage").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    function scrollToInfo() {
+      document.getElementById("fitur").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
     function setAuthMode(mode) {
       authMode = mode;
 
@@ -884,7 +1230,7 @@
     }
 
     function openApp() {
-      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("publicPage").classList.add("hidden");
       document.getElementById("appPage").classList.remove("hidden");
       document.getElementById("logoutBtn").classList.remove("hidden");
     }
